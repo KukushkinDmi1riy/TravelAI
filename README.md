@@ -15,7 +15,7 @@
 
 ### Требования
 
-- [Node.js](https://nodejs.org/) (версия, указанная в `.nvmrc` или последняя LTS)
+- [Node.js](https://nodejs.org/). Рекомендуемая версия указана в файле `.nvmrc`. Если у вас установлен [nvm](https://github.com/nvm-sh/nvm), просто выполните `nvm use` в корне проекта.
 - [npm](https://www.npmjs.com/) (версия 7 или выше для поддержки workspaces)
 
 ### Установка

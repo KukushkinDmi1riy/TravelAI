@@ -1,0 +1,9 @@
+# Ignore artifacts:
+node_modules
+dist
+coverage
+.turbo
+
+# Ignore files:
+package-lock.json
+pnpm-lock.yaml 

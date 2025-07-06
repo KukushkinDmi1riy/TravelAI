@@ -13,6 +13,12 @@
     "format": "prettier --write .",
     "prepare": "husky"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint --edit"
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -28,6 +34,7 @@
     "concurrently": "^8.2.2",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-react": "^7.35.0",
     "husky": "^9.1.4",
     "lint-staged": "^15.2.7",

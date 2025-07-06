@@ -13,12 +13,6 @@
     "format": "prettier --write .",
     "prepare": "husky"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint --edit"
-    }
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",

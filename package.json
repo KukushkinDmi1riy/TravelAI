@@ -38,5 +38,9 @@
       "prettier --write",
       "eslint --fix"
     ]
+  },
+  "dependencies": {
+    "@mantine/modals": "^8.1.2",
+    "@mantine/notifications": "^8.1.2"
   }
 }

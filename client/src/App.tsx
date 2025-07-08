@@ -1,25 +1,26 @@
-import { useState, useEffect } from 'react'
-import './App.css'
+import { useSelector, useDispatch } from 'react-redux';
+import './App.css';
+import type { RootState } from './app/store';
+import { setTheme } from './features/ui/uiSlice';
 
 function App() {
-  const [data, setData] = useState({ message: 'Загрузка...' })
+  const theme = useSelector((state: RootState) => state.ui.theme);
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    fetch('/api/data')
-      .then((res) => res.json())
-      .then((data) => setData(data))
-      .catch(() => setData({ message: 'Не удалось загрузить данные' }))
-  }, [])
+  const handleThemeToggle = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    dispatch(setTheme(newTheme));
+  };
 
   return (
-    <div className="App">
+    <div className={`App ${theme}-theme`}>
       <header className="App-header">
-        <h1>Vite + React</h1>
-        <p>Сообщение от сервера:</p>
-        <p className="server-message">{data.message}</p>
+        <h1>TravelPro AI</h1>
+        <p>Текущая тема: {theme}</p>
+        <button onClick={handleThemeToggle}>Переключить тему</button>
       </header>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

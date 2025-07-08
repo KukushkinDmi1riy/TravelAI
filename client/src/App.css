@@ -1,5 +1,49 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
+}
+
+/* Общие стили для приложения */
+.App {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  transition: background 0.5s ease-in-out;
+}
+
+.App-header {
   text-align: center;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 1px solid white;
+  background-color: transparent;
+  border-radius: 8px;
+  color: white;
+  z-index: 10;
+}
+
+.light-theme {
+  background: linear-gradient(to right, #7c4ca1 0%, #4a3c9f 100%);
+}
+
+.dark-theme {
+  background: linear-gradient(to right, #522f70 0%, #2c235d 100%);
 }

@@ -1,6 +1,6 @@
-import 'dotenv/config';
-import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import 'dotenv/config';
+import express, { NextFunction, Request, Response } from 'express';
 
 import authRoutes from './routes/auth';
 
@@ -10,7 +10,7 @@ const port = process.env.PORT || 3005;
 // Middleware
 app.use(
   cors({
-    origin: 'http://localhost:5173', // URL фронтенда (Vite)
+    origin: 'http://localhost:5174', // URL фронтенда (Vite)
     credentials: true,
   }),
 );

@@ -3,14 +3,23 @@ import { Request } from 'express';
 // Основные типы пользователя
 export interface User {
   id: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  status: string;
   email: string;
   passwordHash: string;
   isApprovedByAdmin: boolean;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface UserProfile {
   id: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  status: string;
   email: string;
   isApprovedByAdmin: boolean;
   createdAt: Date;
@@ -23,8 +32,11 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
+  role?: string; // опциональное поле
 }
 
 export interface LoginResponse {

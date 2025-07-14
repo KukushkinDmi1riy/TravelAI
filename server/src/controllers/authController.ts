@@ -34,7 +34,7 @@ export const register = async (
       return;
     }
 
-    const { email, password } = req.body;
+    const { firstName, lastName, email, password, role } = req.body;
 
     // Проверяем, существует ли пользователь
     const existingUser = await UserModel.findByEmail(email);
@@ -47,7 +47,13 @@ export const register = async (
     }
 
     // Создаем нового пользователя
-    const newUser = await UserModel.create({ email, password });
+    const newUser = await UserModel.create({
+      firstName,
+      lastName,
+      email,
+      password,
+      role,
+    });
 
     res.status(201).json({
       success: true,
@@ -55,6 +61,10 @@ export const register = async (
         'Пользователь успешно зарегистрирован. Ожидайте одобрения администратора.',
       user: {
         id: newUser.id,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        role: newUser.role,
+        status: newUser.status,
         email: newUser.email,
         isApprovedByAdmin: newUser.isApprovedByAdmin,
         createdAt: newUser.createdAt,
@@ -132,6 +142,10 @@ export const login = async (
       token,
       user: {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+        status: user.status,
         email: user.email,
         isApprovedByAdmin: user.isApprovedByAdmin,
         createdAt: user.createdAt,

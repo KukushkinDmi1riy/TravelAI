@@ -1,5 +1,5 @@
 import React from 'react';
-import './Icon.module.css';
+// import './Icon.module.css';
 
 interface IconProps {
   children: React.ReactNode;

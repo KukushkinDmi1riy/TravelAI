@@ -42,6 +42,10 @@ export const authenticateToken = async (
       email: user.email,
       isApprovedByAdmin: user.isApprovedByAdmin,
       createdAt: user.createdAt,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+      status: user.status,
     };
 
     next();

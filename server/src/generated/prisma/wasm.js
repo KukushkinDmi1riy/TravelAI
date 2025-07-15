@@ -127,6 +127,87 @@ exports.Prisma.UserScalarFieldEnum = {
   isApprovedByAdmin: 'isApprovedByAdmin',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  teamId: 'teamId',
+};
+
+exports.Prisma.UserProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  xp: 'xp',
+  level: 'level',
+  streak: 'streak',
+  accuracy: 'accuracy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+};
+
+exports.Prisma.AchievementScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  description: 'description',
+  icon: 'icon',
+};
+
+exports.Prisma.UserAchievementScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  achievementId: 'achievementId',
+  achievedAt: 'achievedAt',
+};
+
+exports.Prisma.TeamScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+};
+
+exports.Prisma.TeamBattleResultScalarFieldEnum = {
+  id: 'id',
+  teamId: 'teamId',
+  score: 'score',
+  date: 'date',
+  position: 'position',
+};
+
+exports.Prisma.LessonScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  topic: 'topic',
+  content: 'content',
+  durationMin: 'durationMin',
+  createdAt: 'createdAt',
+};
+
+exports.Prisma.UserLessonProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  lessonId: 'lessonId',
+  status: 'status',
+  completedAt: 'completedAt',
+};
+
+exports.Prisma.DailyActivityLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  date: 'date',
+  activity: 'activity',
+};
+
+exports.Prisma.QuizResultScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  score: 'score',
+  total: 'total',
+  passedAt: 'passedAt',
+};
+
+exports.Prisma.LeaderboardEntryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  xp: 'xp',
+  rank: 'rank',
+  snapshotDate: 'snapshotDate',
 };
 
 exports.Prisma.SortOrder = {
@@ -139,8 +220,23 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive',
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last',
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
+  UserProgress: 'UserProgress',
+  Achievement: 'Achievement',
+  UserAchievement: 'UserAchievement',
+  Team: 'Team',
+  TeamBattleResult: 'TeamBattleResult',
+  Lesson: 'Lesson',
+  UserLessonProgress: 'UserLessonProgress',
+  DailyActivityLog: 'DailyActivityLog',
+  QuizResult: 'QuizResult',
+  LeaderboardEntry: 'LeaderboardEntry',
 };
 
 /**

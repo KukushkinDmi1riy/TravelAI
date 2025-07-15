@@ -1,75 +1,47 @@
-import {
-  Button,
-  Center,
-  Container,
-  Paper,
-  Stack,
-  Text,
-  Title,
-} from '@mantine/core';
+import { useState } from 'react';
+import { AuthTemplate } from '../../templates';
+import { AuthWelcome, LoginForm, RegisterForm } from '../../organisms';
+import type { LoginData } from '../../molecules/LoginFields/LoginFields';
+
+type AuthView = 'main' | 'register' | 'login';
 
 type AuthPageProps = {
-  onRegister: () => void;
-  onLogin: () => void;
+  onAuthSuccess: () => void;
 };
 
-const AuthPage = ({ onRegister, onLogin }: AuthPageProps) => {
-  return (
-    <Container
-      size="sm"
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-      }}
-    >
-      <Paper
-        shadow="md"
-        p="xl"
-        radius="md"
-        withBorder
-        style={{ width: '100%' }}
-      >
-        <Center mb="xl">
-          <Title order={1} size="h2" ta="center">
-            🧳 TravelAI
-          </Title>
-        </Center>
+const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
+  const [currentView, setCurrentView] = useState<AuthView>('main');
 
-        <Text ta="center" c="dimmed" mb="xl">
-          Добро пожаловать в TravelAI — ваш умный помощник для путешествий
-        </Text>
+  const handleBack = () => setCurrentView('main');
 
-        <Stack gap="md">
-          <Button
-            size="lg"
-            leftSection="👤"
-            onClick={onRegister}
-            fullWidth
-            color="blue"
-          >
-            Зарегистрироваться
-          </Button>
+  const handleLogin = (data: LoginData) => {
+    // Здесь будет логика авторизации
+    console.log('Login data:', data);
+    onAuthSuccess();
+  };
 
-          <Button
-            size="lg"
-            leftSection="🔑"
-            onClick={onLogin}
-            fullWidth
-            variant="outline"
-            color="blue"
-          >
-            Войти
-          </Button>
-        </Stack>
+  const handleRegister = () => {
+    // Логика регистрации уже в компоненте RegisterForm
+    onAuthSuccess();
+  };
 
-        <Text ta="center" size="sm" c="dimmed" mt="xl">
-          Начните своё путешествие с нами
-        </Text>
-      </Paper>
-    </Container>
-  );
+  const renderContent = () => {
+    switch (currentView) {
+      case 'register':
+        return <RegisterForm onBack={handleBack} onRegister={handleRegister} />;
+      case 'login':
+        return <LoginForm onBack={handleBack} onLogin={handleLogin} />;
+      default:
+        return (
+          <AuthWelcome
+            onRegister={() => setCurrentView('register')}
+            onLogin={() => setCurrentView('login')}
+          />
+        );
+    }
+  };
+
+  return <AuthTemplate>{renderContent()}</AuthTemplate>;
 };
 
 export default AuthPage;

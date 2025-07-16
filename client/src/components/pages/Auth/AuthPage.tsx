@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AuthTemplate } from '../../templates';
 import { AuthWelcome, LoginForm, RegisterForm } from '../../organisms';
-import type { LoginData } from '../../molecules/LoginFields/LoginFields';
 
 type AuthView = 'main' | 'register' | 'login';
 
@@ -20,13 +19,6 @@ const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
 
   const handleBack = () => setCurrentView('main');
 
-  const handleLogin = (data: LoginData) => {
-    // Здесь будет логика авторизации
-    localStorage.setItem('isAuthenticated', 'true');
-    console.log('Login data:', data);
-    onAuthSuccess();
-  };
-
   const handleRegister = () => {
     // Логика регистрации уже в компоненте RegisterForm
     localStorage.setItem('isAuthenticated', 'true');
@@ -38,7 +30,7 @@ const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
       case 'register':
         return <RegisterForm onBack={handleBack} onRegister={handleRegister} />;
       case 'login':
-        return <LoginForm onBack={handleBack} onLogin={handleLogin} />;
+        return <LoginForm onBack={handleBack} onLogin={onAuthSuccess} />;
       default:
         return (
           <AuthWelcome

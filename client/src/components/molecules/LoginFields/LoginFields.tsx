@@ -1,11 +1,10 @@
-import { Stack, Checkbox } from '@mantine/core';
+import { Stack } from '@mantine/core';
 import type { UseFormRegister, FieldErrors } from 'react-hook-form';
 import { AuthInput, AuthPasswordInput } from '../../atoms';
 
 export interface LoginData {
   email: string;
   password: string;
-  rememberMe: boolean;
 }
 
 export interface LoginFieldsProps {
@@ -39,23 +38,6 @@ const LoginFields = ({ register, errors }: LoginFieldsProps) => {
         })}
         error={errors.password?.message}
         required
-      />
-
-      <Checkbox
-        label="Запомнить меня"
-        {...register('rememberMe')}
-        styles={{
-          label: {
-            fontSize: 15,
-            color: '#6b7280',
-          },
-          input: {
-            '&:checked': {
-              backgroundColor: '#667eea',
-              borderColor: '#667eea',
-            },
-          },
-        }}
       />
     </Stack>
   );

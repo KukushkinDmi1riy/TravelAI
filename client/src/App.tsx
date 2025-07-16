@@ -44,7 +44,10 @@ function App() {
         }}
       >
         <button
-          onClick={() => setIsAuthenticated(false)}
+          onClick={() => {
+            localStorage.removeItem('isAuthenticated');
+            setIsAuthenticated(false);
+          }}
           style={{
             padding: '0.5rem 1rem',
             background: '#e03131',

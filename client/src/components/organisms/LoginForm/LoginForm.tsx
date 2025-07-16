@@ -18,7 +18,6 @@ const LoginForm = ({ onBack, onLogin }: LoginFormProps) => {
     defaultValues: {
       email: '',
       password: '',
-      rememberMe: false,
     },
   });
 

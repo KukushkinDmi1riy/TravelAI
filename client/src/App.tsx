@@ -1,8 +1,7 @@
 import { Container, Tabs } from '@mantine/core';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from './app/hooks';
 import './App.css';
-import type { RootState } from './app/store';
 import { TravelProHeader } from './components/TravelHeader/TravelProHeader';
 import AuthContainer from './components/pages/Auth/AuthContainer';
 import { Dashboard } from './components/pages/Dashboard/Dashboard';
@@ -10,8 +9,8 @@ import { MantineDemo } from './components/pages/MantineDemo/MantineDemo';
 import { setTheme } from './features/ui/uiSlice';
 
 function App() {
-  const theme = useSelector((state: RootState) => state.ui.theme);
-  const dispatch = useDispatch();
+  const theme = useAppSelector((state) => state.ui.theme);
+  const dispatch = useAppDispatch();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 

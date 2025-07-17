@@ -5,16 +5,15 @@ import { AuthButton } from '../../atoms';
 import { AuthFormHeader, RegisterFields } from '../../molecules';
 import type { RegisterData } from '../../molecules/RegisterFields/RegisterFields';
 import { registerUser } from '../../../features/auth/api';
-import type { User } from '../../../features/auth/authSlice';
 import { setToken, setUser } from '../../../features/auth/authSlice';
 import { toast } from 'react-toastify';
+import { saveToken } from '../../../features/auth/tokenStorage';
 
 export interface RegisterFormProps {
   onBack: () => void;
-  onRegister?: (data: User) => void;
 }
 
-const RegisterForm = ({ onBack, onRegister }: RegisterFormProps) => {
+const RegisterForm = ({ onBack }: RegisterFormProps) => {
   const dispatch = useAppDispatch();
   const {
     register,
@@ -43,7 +42,7 @@ const RegisterForm = ({ onBack, onRegister }: RegisterFormProps) => {
     onSuccess: (data) => {
       dispatch(setUser(data.user));
       dispatch(setToken(data.token));
-      if (onRegister) onRegister(data.user);
+      saveToken(data.token);
     },
     onError: (error: Error) => {
       toast.error(error.message);

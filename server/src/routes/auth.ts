@@ -21,6 +21,7 @@ const router = express.Router();
 // Публичные маршруты
 router.post('/register', validateRegister, register);
 router.post('/login', validateLogin, login);
+router.get('/me', authenticateToken, getProfile);
 
 // Защищенные маршруты (требуют аутентификации)
 router.get('/profile', authenticateToken, getProfile);

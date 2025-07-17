@@ -55,10 +55,14 @@ export const register = async (
       role,
     });
 
+    // Генерируем JWT токен
+    const token = generateToken(newUser.id);
+
     res.status(201).json({
       success: true,
       message:
         'Пользователь успешно зарегистрирован. Ожидайте одобрения администратора.',
+      token,
       user: {
         id: newUser.id,
         firstName: newUser.firstName,

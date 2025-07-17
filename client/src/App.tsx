@@ -8,6 +8,8 @@ import AuthContainer from './components/pages/Auth/AuthContainer';
 import { Dashboard } from './components/pages/Dashboard/Dashboard';
 import { MantineDemo } from './components/pages/MantineDemo/MantineDemo';
 import { setTheme } from './features/ui/uiSlice';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const theme = useSelector((state: RootState) => state.ui.theme);
@@ -29,6 +31,11 @@ function App() {
     return (
       <div className={`App ${theme}-theme`}>
         <AuthContainer onAuthSuccess={handleAuthSuccess} />
+        <ToastContainer
+          position="top-right"
+          autoClose={1000}
+          closeButton={false}
+        />
       </div>
     );
   }
@@ -86,6 +93,11 @@ function App() {
           </Tabs.Panel>
         </Tabs>
       </Container>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        closeButton={false}
+      />
     </div>
   );
 }

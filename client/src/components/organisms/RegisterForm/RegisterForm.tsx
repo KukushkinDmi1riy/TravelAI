@@ -7,6 +7,7 @@ import type { RegisterData } from '../../molecules/RegisterFields/RegisterFields
 import { registerUser } from '../../../features/auth/api';
 import type { User } from '../../../features/auth/authSlice';
 import { setToken, setUser } from '../../../features/auth/authSlice';
+import { toast } from 'react-toastify';
 
 export interface RegisterFormProps {
   onBack: () => void;
@@ -45,7 +46,7 @@ const RegisterForm = ({ onBack, onRegister }: RegisterFormProps) => {
       if (onRegister) onRegister(data.user);
     },
     onError: (error: Error) => {
-      alert(error.message);
+      toast.error(error.message);
     },
   });
 

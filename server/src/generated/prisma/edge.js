@@ -220,7 +220,7 @@ const config = {
     },
     output: {
       value:
-        '/Users/Dmitry_Kukushkin/Desktop/TravelAI/server/src/generated/prisma',
+        '/Users/kristinakasanovskaa/Desktop/TravelAI/server/src/generated/prisma',
       fromEnvVar: null,
     },
     config: {
@@ -229,13 +229,13 @@ const config = {
     binaryTargets: [
       {
         fromEnvVar: null,
-        value: 'darwin',
+        value: 'darwin-arm64',
         native: true,
       },
     ],
     previewFeatures: [],
     sourceFilePath:
-      '/Users/Dmitry_Kukushkin/Desktop/TravelAI/server/prisma/schema.prisma',
+      '/Users/kristinakasanovskaa/Desktop/TravelAI/server/prisma/schema.prisma',
     isCustomOutput: true,
   },
   relativeEnvPaths: {
@@ -247,6 +247,7 @@ const config = {
   engineVersion: 'f40f79ec31188888a2e33acda0ecc8fd10a853a9',
   datasourceNames: ['db'],
   activeProvider: 'postgresql',
+  postinstall: false,
   inlineDatasources: {
     db: {
       url: {

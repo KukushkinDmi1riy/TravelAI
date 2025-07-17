@@ -1,15 +1,24 @@
 import { Text } from '@mantine/core';
 import { useForm } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
+import { useAppDispatch } from '../../../app/hooks';
+import { setUser, setToken, type User } from '../../../features/auth/authSlice';
+import { loginUser } from '../../../features/auth/api';
 import { AuthButton } from '../../atoms';
 import { AuthFormHeader, LoginFields } from '../../molecules';
-import type { LoginData } from '../../molecules/LoginFields/LoginFields';
 
 export interface LoginFormProps {
   onBack: () => void;
-  onLogin: (data: LoginData) => void;
+  onLogin: () => void;
+}
+
+interface LoginData {
+  email: string;
+  password: string;
 }
 
 const LoginForm = ({ onBack, onLogin }: LoginFormProps) => {
+  const dispatch = useAppDispatch();
   const {
     register,
     handleSubmit,
@@ -18,12 +27,24 @@ const LoginForm = ({ onBack, onLogin }: LoginFormProps) => {
     defaultValues: {
       email: '',
       password: '',
-      rememberMe: false,
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (data: { user: User; token: string }) => {
+      dispatch(setUser(data.user));
+      dispatch(setToken(data.token));
+      localStorage.setItem('isAuthenticated', 'true');
+      onLogin();
+    },
+    onError: (error: Error) => {
+      alert(error.message);
     },
   });
 
   const onSubmit = (data: LoginData) => {
-    onLogin(data);
+    mutation.mutate(data);
   };
 
   return (
@@ -33,7 +54,13 @@ const LoginForm = ({ onBack, onLogin }: LoginFormProps) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <LoginFields register={register} errors={errors} />
 
-        <AuthButton type="submit" leftSection="🔑" variant="gradient" mt={16}>
+        <AuthButton
+          type="submit"
+          leftSection="🔑"
+          variant="gradient"
+          mt={16}
+          loading={mutation.status === 'pending'}
+        >
           Войти
         </AuthButton>
       </form>

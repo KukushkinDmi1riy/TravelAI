@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../../app/hooks';
 import { AuthButton } from '../../atoms';
 import { AuthFormHeader, RegisterFields } from '../../molecules';
 import type { RegisterData } from '../../molecules/RegisterFields/RegisterFields';
@@ -14,7 +14,7 @@ export interface RegisterFormProps {
 }
 
 const RegisterForm = ({ onBack, onRegister }: RegisterFormProps) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const {
     register,
     handleSubmit,

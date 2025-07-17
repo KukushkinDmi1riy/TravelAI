@@ -6,10 +6,10 @@ import { setUser, setToken, type User } from '../../../features/auth/authSlice';
 import { loginUser } from '../../../features/auth/api';
 import { AuthButton } from '../../atoms';
 import { AuthFormHeader, LoginFields } from '../../molecules';
+import { saveToken } from '../../../features/auth/tokenStorage';
 
 export interface LoginFormProps {
   onBack: () => void;
-  onLogin: () => void;
 }
 
 interface LoginData {
@@ -17,7 +17,7 @@ interface LoginData {
   password: string;
 }
 
-const LoginForm = ({ onBack, onLogin }: LoginFormProps) => {
+const LoginForm = ({ onBack }: LoginFormProps) => {
   const dispatch = useAppDispatch();
   const {
     register,
@@ -35,8 +35,7 @@ const LoginForm = ({ onBack, onLogin }: LoginFormProps) => {
     onSuccess: (data: { user: User; token: string }) => {
       dispatch(setUser(data.user));
       dispatch(setToken(data.token));
-      localStorage.setItem('isAuthenticated', 'true');
-      onLogin();
+      saveToken(data.token);
     },
     onError: (error: Error) => {
       alert(error.message);

@@ -6,6 +6,8 @@ import {
   verifyToken,
   getAllUsers,
   approveUser,
+  refreshToken,
+  logout as logoutController,
 } from '../controllers/authController';
 
 import { authenticateToken, requireAdminApproval } from '../middleware/auth';
@@ -22,6 +24,17 @@ const router = express.Router();
 router.post('/register', validateRegister, register);
 router.post('/login', validateLogin, login);
 router.get('/me', authenticateToken, getProfile);
+
+// Обновление access token по refresh token
+router.post('/refresh', refreshToken);
+
+// Logout
+router.post('/logout', logoutController);
+
+// Эндпоинт для получения CSRF-токена
+router.get('/csrf', (req, res) => {
+  res.status(200).json({ success: true });
+});
 
 // Защищенные маршруты (требуют аутентификации)
 router.get('/profile', authenticateToken, getProfile);

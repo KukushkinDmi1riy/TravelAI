@@ -5,9 +5,8 @@ import { AuthButton } from '../../atoms';
 import { AuthFormHeader, RegisterFields } from '../../molecules';
 import type { RegisterData } from '../../molecules/RegisterFields/RegisterFields';
 import { registerUser } from '../../../features/auth/api';
-import { setToken, setUser } from '../../../features/auth/authSlice';
+import { setUser, type User } from '../../../features/auth/authSlice';
 import { toast } from 'react-toastify';
-import { saveToken } from '../../../features/auth/tokenStorage';
 
 export interface RegisterFormProps {
   onBack: () => void;
@@ -31,7 +30,7 @@ const RegisterForm = ({ onBack }: RegisterFormProps) => {
     },
   });
 
-  const mutation = useMutation({
+  const mutation = useMutation<{ user: User }, Error, RegisterData>({
     mutationFn: async (data: RegisterData) => {
       // Не отправляем confirmPassword на сервер
       const rest = Object.fromEntries(
@@ -41,8 +40,6 @@ const RegisterForm = ({ onBack }: RegisterFormProps) => {
     },
     onSuccess: (data) => {
       dispatch(setUser(data.user));
-      dispatch(setToken(data.token));
-      saveToken(data.token);
     },
     onError: (error: Error) => {
       toast.error(error.message);

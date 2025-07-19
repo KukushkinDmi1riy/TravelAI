@@ -1,7 +1,8 @@
 import { Response } from 'express';
+import jwt from 'jsonwebtoken';
 import { validationResult } from 'express-validator';
 import UserModel from '../models/User';
-import { generateToken } from '../middleware/auth';
+import { generateToken, generateRefreshToken } from '../middleware/auth';
 import type {
   LoginRequest,
   RegisterRequest,
@@ -57,12 +58,26 @@ export const register = async (
 
     // Генерируем JWT токен
     const token = generateToken(newUser.id);
+    const refreshToken = generateRefreshToken(newUser.id);
+
+    // Устанавливаем access token и refresh token в httpOnly cookie
+    res.cookie('accessToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
+    });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 дней
+    });
 
     res.status(201).json({
       success: true,
       message:
         'Пользователь успешно зарегистрирован. Ожидайте одобрения администратора.',
-      token,
       user: {
         id: newUser.id,
         firstName: newUser.firstName,
@@ -139,11 +154,25 @@ export const login = async (
 
     // Генерируем JWT токен
     const token = generateToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
+
+    // Устанавливаем access token и refresh token в httpOnly cookie
+    res.cookie('accessToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
+    });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 дней
+    });
 
     res.json({
       success: true,
       message: 'Успешный вход в систему',
-      token,
       user: {
         id: user.id,
         firstName: user.firstName,
@@ -272,4 +301,66 @@ export const approveUser = async (
       message: 'Внутренняя ошибка сервера',
     });
   }
+};
+
+// Обновление access token по refresh token
+export const refreshToken = async (req: any, res: Response) => {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+      return res
+        .status(401)
+        .json({ success: false, message: 'Refresh token отсутствует' });
+    }
+    const jwtSecret =
+      process.env.JWT_REFRESH_SECRET ||
+      'our_super_secret_refresh_jwt_key_change_in_production';
+    let payload: any;
+    try {
+      payload = jwt.verify(refreshToken, jwtSecret);
+    } catch (e) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'Refresh token невалиден' });
+    }
+    const user = await UserModel.findById(payload.userId);
+    if (!user) {
+      return res
+        .status(401)
+        .json({ success: false, message: 'Пользователь не найден' });
+    }
+    const newAccessToken = generateToken(user.id);
+    // Устанавливаем новый access token в cookie
+    res.cookie('accessToken', newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
+    });
+    res.json({ success: true });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: 'Ошибка обновления токена' });
+  }
+};
+
+// Logout пользователя: удаляет accessToken и refreshToken cookie
+export const logout = (req: any, res: Response) => {
+  res.clearCookie('accessToken', {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  });
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  });
+  res.clearCookie('XSRF-TOKEN', {
+    httpOnly: false,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+  });
+  res.json({ success: true, message: 'Выход выполнен' });
 };

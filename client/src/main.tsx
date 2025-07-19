@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import App from './App.tsx';
 import { store } from './app/store.ts';
 import { mantineTheme } from './theme/mantine.ts';
+import { BrowserRouter } from 'react-router-dom';
 
 // Mantine CSS
 import '@mantine/core/styles.css';
@@ -17,12 +18,14 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <MantineProvider theme={mantineTheme}>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </Provider>
-    </MantineProvider>
+    <BrowserRouter>
+      <MantineProvider theme={mantineTheme}>
+        <Provider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <App />
+          </QueryClientProvider>
+        </Provider>
+      </MantineProvider>
+    </BrowserRouter>
   </StrictMode>,
 );

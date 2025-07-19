@@ -1,9 +1,11 @@
 import cors from 'cors';
 import 'dotenv/config';
 import express, { NextFunction, Request, Response } from 'express';
+import cookieParser from 'cookie-parser';
 
 import authRoutes from './routes/auth';
 import UserModel from './models/User';
+import { attachCsrfToken, verifyCsrf } from './middleware/auth';
 
 const app = express();
 const port = process.env.PORT || 3005;
@@ -18,12 +20,20 @@ app.use(
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'x-xsrf-token',
+    ],
     optionsSuccessStatus: 200, // Для старых браузеров
   }),
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(attachCsrfToken);
+app.use(verifyCsrf);
 
 // Логирование запросов
 app.use((req: Request, res: Response, next: NextFunction) => {

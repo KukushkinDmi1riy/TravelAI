@@ -2,11 +2,10 @@ import { Text } from '@mantine/core';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { useAppDispatch } from '../../../app/hooks';
-import { setUser, setToken, type User } from '../../../features/auth/authSlice';
+import { setUser, type User } from '../../../features/auth/authSlice';
 import { loginUser } from '../../../features/auth/api';
 import { AuthButton } from '../../atoms';
 import { AuthFormHeader, LoginFields } from '../../molecules';
-import { saveToken } from '../../../features/auth/tokenStorage';
 
 export interface LoginFormProps {
   onBack: () => void;
@@ -30,12 +29,10 @@ const LoginForm = ({ onBack }: LoginFormProps) => {
     },
   });
 
-  const mutation = useMutation({
+  const mutation = useMutation<{ user: User }, Error, LoginData>({
     mutationFn: loginUser,
-    onSuccess: (data: { user: User; token: string }) => {
+    onSuccess: (data) => {
       dispatch(setUser(data.user));
-      dispatch(setToken(data.token));
-      saveToken(data.token);
     },
     onError: (error: Error) => {
       alert(error.message);

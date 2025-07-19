@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from '../app/hooks';
-import { logout, setToken, setUser } from '../features/auth/authSlice';
-import { getCurrentUser } from '../features/auth/api';
-import { getStoredToken, removeToken } from '../features/auth/tokenStorage';
+import { logout, setUser } from '../features/auth/authSlice';
+import { getCurrentUser, refreshAccessToken } from '../features/auth/api';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -13,16 +12,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     const initAuth = async () => {
-      const token = getStoredToken();
-
-      if (token) {
+      try {
+        const user = await getCurrentUser();
+        dispatch(setUser(user));
+      } catch {
+        // Если access token невалидный или истёк, пробуем обновить через refresh token
         try {
-          dispatch(setToken(token));
-          const user = await getCurrentUser(token);
+          await refreshAccessToken();
+          const user = await getCurrentUser();
           dispatch(setUser(user));
         } catch {
-          // Если токен невалидный или истек, очищаем состояние
-          removeToken();
           dispatch(logout());
         }
       }

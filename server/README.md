@@ -13,6 +13,8 @@ npm install
 ```env
 JWT_SECRET=your_super_secret_jwt_key_change_in_production
 JWT_EXPIRES_IN=7d
+JWT_REFRESH_SECRET=your_super_secret_refresh_jwt_key_change_in_production
+JWT_REFRESH_EXPIRES_IN=30d
 PORT=3001
 NODE_ENV=development
 ```

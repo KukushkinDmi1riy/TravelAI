@@ -1,36 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { AuthTemplate } from '../../templates';
 import { AuthWelcome, LoginForm, RegisterForm } from '../../organisms';
 
 type AuthView = 'main' | 'register' | 'login';
 
-type AuthPageProps = {
-  onAuthSuccess: () => void;
-};
-
-const AuthPage = ({ onAuthSuccess }: AuthPageProps) => {
+const AuthPage = () => {
   const [currentView, setCurrentView] = useState<AuthView>('main');
 
-  useEffect(() => {
-    if (localStorage.getItem('isAuthenticated') === 'true') {
-      onAuthSuccess();
-    }
-  }, [onAuthSuccess]);
-
   const handleBack = () => setCurrentView('main');
-
-  const handleRegister = () => {
-    // Логика регистрации уже в компоненте RegisterForm
-    localStorage.setItem('isAuthenticated', 'true');
-    onAuthSuccess();
-  };
 
   const renderContent = () => {
     switch (currentView) {
       case 'register':
-        return <RegisterForm onBack={handleBack} onRegister={handleRegister} />;
+        return <RegisterForm onBack={handleBack} />;
       case 'login':
-        return <LoginForm onBack={handleBack} onLogin={onAuthSuccess} />;
+        return <LoginForm onBack={handleBack} />;
       default:
         return (
           <AuthWelcome

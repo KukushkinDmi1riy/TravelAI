@@ -49,6 +49,7 @@ export interface LoginResponse {
 export interface RegisterResponse {
   success: boolean;
   message: string;
+  token?: string;
   user?: UserProfile;
 }
 

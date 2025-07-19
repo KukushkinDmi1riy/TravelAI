@@ -196,7 +196,7 @@ export const login = async (
 // Получение информации о текущем пользователе
 export const getProfile = async (
   req: AuthenticatedRequest,
-  res: Response<ApiResponse>,
+  res: Response<LoginResponse>,
 ): Promise<void> => {
   try {
     const user = await UserModel.findById(req.user!.id);
@@ -212,8 +212,12 @@ export const getProfile = async (
     res.json({
       success: true,
       message: 'Профиль получен',
-      data: {
+      user: {
         id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+        status: user.status,
         email: user.email,
         isApprovedByAdmin: user.isApprovedByAdmin,
         createdAt: user.createdAt,

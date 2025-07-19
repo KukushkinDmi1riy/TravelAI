@@ -9,25 +9,36 @@ import { setTheme } from './features/ui/uiSlice';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './components/AuthProvider';
-import { logout } from './features/auth/authSlice';
+import {
+  logout,
+  selectAuthInitialized,
+  selectAuthLoading,
+} from './features/auth/authSlice';
 import { logoutUser } from './features/auth/api';
 import { useNavigate, Routes, Route } from 'react-router-dom';
 import AuthContainer from './components/pages/Auth/AuthContainer';
+import { LoadingSpinner } from './components/molecules';
+import { selectUser } from './features/auth/authSlice';
 
 function App() {
   const theme = useAppSelector((state) => state.ui.theme);
-  const user = useAppSelector((state) => state.auth.user);
+  const user = useAppSelector(selectUser);
+  const isAuthInitialized = useAppSelector(selectAuthInitialized);
+  const isAuthLoading = useAppSelector(selectAuthLoading);
   const dispatch = useAppDispatch();
   const [activeTab, setActiveTab] = useState('dashboard');
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
-      navigate('/');
-    } else {
-      navigate('/auth');
+    // Только после инициализации аутентификации делаем навигацию
+    if (isAuthInitialized) {
+      if (user) {
+        navigate('/');
+      } else {
+        navigate('/auth');
+      }
     }
-  }, [user, navigate]);
+  }, [user, navigate, isAuthInitialized]);
 
   const handleThemeToggle = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -42,6 +53,18 @@ function App() {
     }
     dispatch(logout());
   };
+
+  if (!isAuthInitialized || isAuthLoading) {
+    return (
+      <AuthProvider>
+        <LoadingSpinner
+          title="✈️ TravelPro AI"
+          subtitle="Проверка авторизации..."
+          animation="fade"
+        />
+      </AuthProvider>
+    );
+  }
 
   return (
     <AuthProvider>

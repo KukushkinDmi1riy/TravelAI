@@ -1,7 +1,16 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from '../app/hooks';
-import { logout, setUser } from '../features/auth/authSlice';
-import { getCurrentUser, refreshAccessToken } from '../features/auth/api';
+import {
+  logout,
+  setUser,
+  setAuthLoading,
+  setInitialized,
+} from '../features/auth/authSlice';
+import {
+  getCurrentUser,
+  refreshAccessToken,
+  ensureCsrfToken,
+} from '../features/auth/api';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -12,11 +21,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     const initAuth = async () => {
+      dispatch(setAuthLoading(true));
+
       try {
+        await ensureCsrfToken();
+
         const user = await getCurrentUser();
         dispatch(setUser(user));
       } catch {
-        // Если access token невалидный или истёк, пробуем обновить через refresh token
         try {
           await refreshAccessToken();
           const user = await getCurrentUser();
@@ -24,6 +36,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         } catch {
           dispatch(logout());
         }
+      } finally {
+        dispatch(setInitialized());
       }
     };
 

@@ -2,6 +2,7 @@ import jwt, { SignOptions } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import UserModel from '../models/User';
 import type { UserProfile, AuthenticatedRequest } from '../types/index';
+import crypto from 'crypto';
 
 // Middleware для проверки JWT токена
 export const authenticateToken = async (
@@ -10,8 +11,7 @@ export const authenticateToken = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    const token = req.cookies?.accessToken;
 
     if (!token) {
       res.status(401).json({
@@ -80,4 +80,46 @@ export const generateToken = (userId: string): string => {
   const expiresIn = process.env.JWT_EXPIRES_IN || '7d';
 
   return jwt.sign({ userId }, jwtSecret, { expiresIn } as any);
+};
+
+// Функция для генерации refresh token
+export const generateRefreshToken = (userId: string): string => {
+  const jwtSecret =
+    process.env.JWT_REFRESH_SECRET ||
+    'our_super_secret_refresh_jwt_key_change_in_production';
+  const expiresIn = process.env.JWT_REFRESH_EXPIRES_IN || '30d';
+
+  return jwt.sign({ userId }, jwtSecret, { expiresIn } as any);
+};
+
+// Middleware для генерации CSRF-токена (double submit cookie)
+export const attachCsrfToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+    const token = crypto.randomBytes(32).toString('hex');
+    res.cookie('XSRF-TOKEN', token, {
+      httpOnly: false,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
+    });
+    res.locals.csrfToken = token;
+  }
+  next();
+};
+
+// Middleware для проверки CSRF-токена
+export const verifyCsrf = (req: Request, res: Response, next: NextFunction) => {
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
+    const cookieToken = req.cookies['XSRF-TOKEN'];
+    const headerToken = req.get('x-xsrf-token');
+    if (!cookieToken || !headerToken || cookieToken !== headerToken) {
+      return res
+        .status(403)
+        .json({ success: false, message: 'CSRF token invalid' });
+    }
+  }
+  next();
 };

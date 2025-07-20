@@ -1,6 +1,7 @@
 // Molecules - комбинации атомов
 export { Card } from './Card/Card';
 export { Achievement } from './Achievement/Achievement';
+export { LoadingSpinner } from './LoadingSpinner/LoadingSpinner';
 
 // Auth molecules
 export { default as AuthFormHeader } from './AuthFormHeader/AuthFormHeader';

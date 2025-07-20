@@ -11,4 +11,4 @@ export * from './templates';
 export { Button, Badge, Avatar, Icon, ProgressBar } from './atoms';
 export { Card, Achievement } from './molecules';
 export { UserProfile, ActivityCard } from './organisms';
-export { DashboardTemplate } from './templates';
+// export { DashboardTemplate } from './templates';

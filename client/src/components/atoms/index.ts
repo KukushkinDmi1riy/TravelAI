@@ -1,5 +1,7 @@
 // Atoms - базовые строительные блоки UI
 export { Button } from './Button/Button';
+export { LogoutButton } from './LogoutButton/LogoutButton';
+export { Logo } from './Logo/Logo';
 export { Badge } from './Badge/Badge';
 export { Avatar } from './Avatar/Avatar';
 export { Icon } from './Icon/Icon';

@@ -1,0 +1,44 @@
+.headerBg {
+    padding: 32px 16px 0 16px;
+    display: flex;
+    min-height: 120px;
+    color: #6f47e7;
+  }
+  
+  .headerPaper {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(108, 99, 255, 0.15);
+    padding: 32px 48px;
+    backdrop-filter: blur(10px);
+  }
+
+  .headerContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .leftSection {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .textContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .logoutButton {
+    margin-left: auto;
+  }
+  
+  .headerText {
+    color: rgb(59, 58, 57);
+  } 

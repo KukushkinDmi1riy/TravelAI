@@ -17,8 +17,7 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
   font-size: calc(10px + 2vmin);
   color: white;
   transition: background 0.5s ease-in-out;
@@ -26,6 +25,12 @@ body {
 
 .App-header {
   text-align: center;
+}
+
+.content-wrapper {
+  padding-left: 80px;
+  padding-right: 80px;
+  flex: 1;
 }
 
 /* Стили только для кнопок в App компоненте, не затрагивая Mantine компоненты */

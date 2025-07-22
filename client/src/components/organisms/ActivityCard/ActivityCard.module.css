@@ -12,7 +12,7 @@
   max-width: 100%;
 }
 
-.card-icon {
+.cardIcon {
   width: 56px;
   height: 56px;
   border-radius: 16px;
@@ -25,14 +25,14 @@
   box-shadow: 0 2px 8px rgba(60,54,107,0.10);
 }
 
-.card-title {
+.cardTitle {
   font-size: 20px;
   font-weight: bold;
   color: #333;
   margin-top: 10px;
 }
 
-.card-description {
+.cardDescription {
   color: #666;
   font-size: 18px;
   line-height: 1.6;
@@ -41,7 +41,7 @@
   text-align: left;
 }
 
-.card-button {
+.cardButton {
   align-self: flex-start;
   margin-bottom: 8px;
   margin-top: 16px;

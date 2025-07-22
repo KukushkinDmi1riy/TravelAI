@@ -37,12 +37,12 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
           }}
         >
           <Logo size="md" icon={icon} />
-          <div className={styles['card-title']}>{title}</div>
+          <div className={styles.cardTitle}>{title}</div>
         </div>
-        <div className={styles['card-description']}>{description}</div>
+        <div className={styles.cardDescription}>{description}</div>
       </div>
       <Button
-        className={styles['card-button']}
+        className={styles.cardButton}
         variant="gradient"
         gradient={{ from: 'indigo', to: 'violet', deg: 90 }}
         radius="md"

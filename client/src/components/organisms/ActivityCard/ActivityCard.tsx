@@ -1,38 +1,59 @@
+import { Card, Button } from '@mantine/core';
 import React from 'react';
-import { Button } from '../../atoms/Button/Button';
-import './ActivityCard.module.css';
+import styles from './ActivityCard.module.css';
+import { Logo } from '../../atoms';
 
 interface ActivityCardProps {
+  icon: string;
   title: string;
   description: string;
-  icon: React.ReactNode;
   buttonText: string;
-  onButtonClick?: () => void;
-  className?: string;
+  onButtonClick: () => void;
 }
 
 export const ActivityCard: React.FC<ActivityCardProps> = ({
+  icon,
   title,
   description,
-  icon,
   buttonText,
   onButtonClick,
-  className = '',
-}) => {
-  return (
-    <div className={`activity-card ${className}`}>
-      <div className="activity-card__icon">{icon}</div>
-
-      <div className="activity-card__content">
-        <h3 className="activity-card__title">{title}</h3>
-        <p className="activity-card__description">{description}</p>
+}) => (
+  <Card shadow="md" radius="xl" padding="xl" className={styles.card}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
+    >
+      <div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+          }}
+        >
+          <Logo size="md" icon={icon} />
+          <div className={styles['card-title']}>{title}</div>
+        </div>
+        <div className={styles['card-description']}>{description}</div>
       </div>
-
-      <div className="activity-card__footer">
-        <Button variant="primary" size="md" onClick={onButtonClick}>
-          {buttonText}
-        </Button>
-      </div>
+      <Button
+        className={styles['card-button']}
+        variant="gradient"
+        gradient={{ from: 'indigo', to: 'violet', deg: 90 }}
+        radius="md"
+        size="md"
+        onClick={onButtonClick}
+        style={{ height: 52 }}
+      >
+        {buttonText}
+      </Button>
     </div>
-  );
-};
+  </Card>
+);
+
+export default ActivityCard;

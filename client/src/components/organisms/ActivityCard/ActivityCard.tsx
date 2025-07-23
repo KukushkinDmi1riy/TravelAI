@@ -1,7 +1,8 @@
-import { Card, Button } from '@mantine/core';
+import { Card } from '@mantine/core';
 import React from 'react';
 import styles from './ActivityCard.module.css';
 import { Logo } from '../../atoms';
+import { Button } from '../../atoms/Button/Button';
 
 interface ActivityCardProps {
   icon: string;
@@ -44,11 +45,9 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
       <Button
         className={styles.cardButton}
         variant="gradient"
-        gradient={{ from: 'indigo', to: 'violet', deg: 90 }}
         radius="md"
-        size="md"
+        size="lg"
         onClick={onButtonClick}
-        style={{ height: 52 }}
       >
         {buttonText}
       </Button>

@@ -14,7 +14,7 @@ export function UserInfoHeader({
   return (
     <Box className={styles.headerBg}>
       <Paper
-        radius="lg"
+        bdrs="xl"
         px="xl"
         py="lg"
         shadow="md"

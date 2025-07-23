@@ -1,10 +1,11 @@
 import React from 'react';
 import { Button as MantineButton } from '@mantine/core';
 import type { ButtonProps as MantineButtonProps } from '@mantine/core';
+import styles from './Button.module.css';
 
 interface ButtonProps extends Omit<MantineButtonProps, 'variant' | 'size'> {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'gradient';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
   disabled?: boolean;
@@ -33,9 +34,18 @@ export const Button: React.FC<ButtonProps> = ({
         return 'outline';
       case 'ghost':
         return 'subtle';
+      case 'gradient':
+        return 'filled'; // Используем filled как базу для градиента
       default:
         return 'filled';
     }
+  };
+
+  // Получаем кастомный класс для градиента
+  const getCustomClassName = (): string => {
+    const baseClass = className;
+    const gradientClass = variant === 'gradient' ? styles.buttonGradient : '';
+    return `${baseClass} ${gradientClass}`.trim();
   };
 
   // Преобразуем размеры
@@ -59,7 +69,7 @@ export const Button: React.FC<ButtonProps> = ({
       fullWidth={fullWidth}
       disabled={disabled}
       onClick={onClick}
-      className={className}
+      className={getCustomClassName()}
       {...mantineProps}
     >
       {children}

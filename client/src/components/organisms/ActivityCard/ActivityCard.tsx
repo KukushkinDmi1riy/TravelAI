@@ -1,38 +1,58 @@
+import { Card } from '@mantine/core';
 import React from 'react';
+import styles from './ActivityCard.module.css';
+import { Logo } from '../../atoms';
 import { Button } from '../../atoms/Button/Button';
-import './ActivityCard.module.css';
 
 interface ActivityCardProps {
+  icon: string;
   title: string;
   description: string;
-  icon: React.ReactNode;
   buttonText: string;
-  onButtonClick?: () => void;
-  className?: string;
+  onButtonClick: () => void;
 }
 
 export const ActivityCard: React.FC<ActivityCardProps> = ({
+  icon,
   title,
   description,
-  icon,
   buttonText,
   onButtonClick,
-  className = '',
-}) => {
-  return (
-    <div className={`activity-card ${className}`}>
-      <div className="activity-card__icon">{icon}</div>
-
-      <div className="activity-card__content">
-        <h3 className="activity-card__title">{title}</h3>
-        <p className="activity-card__description">{description}</p>
+}) => (
+  <Card shadow="md" radius="xl" padding="xl" className={styles.card}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
+    >
+      <div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+          }}
+        >
+          <Logo size="md" icon={icon} />
+          <div className={styles.cardTitle}>{title}</div>
+        </div>
+        <div className={styles.cardDescription}>{description}</div>
       </div>
-
-      <div className="activity-card__footer">
-        <Button variant="primary" size="md" onClick={onButtonClick}>
-          {buttonText}
-        </Button>
-      </div>
+      <Button
+        className={styles.cardButton}
+        variant="gradient"
+        radius="md"
+        size="lg"
+        onClick={onButtonClick}
+      >
+        {buttonText}
+      </Button>
     </div>
-  );
-};
+  </Card>
+);
+
+export default ActivityCard;

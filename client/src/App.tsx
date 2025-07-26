@@ -15,6 +15,7 @@ import { useNavigate, Routes, Route } from 'react-router-dom';
 import AuthContainer from './components/pages/Auth/AuthContainer';
 import { LoadingSpinner } from './components/molecules';
 import { selectUser } from './features/auth/authSlice';
+import ActivitiesGrid from './components/organisms/ActivityCard/ActivitiesGrid';
 
 function App() {
   const theme = useAppSelector((state) => state.ui.theme);
@@ -80,6 +81,7 @@ function App() {
               <div className="content-wrapper">
                 <TravelProHeader showLogout={true} onLogout={handleLogout} />
                 <UserInfoHeader />
+                <ActivitiesGrid />
               </div>
               <ToastContainer
                 position="top-right"

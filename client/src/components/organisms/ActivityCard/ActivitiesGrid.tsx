@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import ActivityCard from './ActivityCard';
 import styles from './ActivitiesGrid.module.css';
 import { Modal } from '@mantine/core';
-import AchievementsGrid from '../Achievement/AchievementsGrid';
 
 const activities = [
   {
@@ -60,7 +59,6 @@ export const ActivitiesGrid: React.FC = () => {
       >
         {/* Пустое модальное окно */}
       </Modal>
-      <AchievementsGrid />
     </>
   );
 };

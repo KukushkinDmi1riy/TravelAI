@@ -16,6 +16,7 @@ import AuthContainer from './components/pages/Auth/AuthContainer';
 import { LoadingSpinner } from './components/molecules';
 import { selectUser } from './features/auth/authSlice';
 import ActivitiesGrid from './components/organisms/ActivityCard/ActivitiesGrid';
+import { AchievementsGrid } from './components/organisms/Achievement/AchievementsGrid';
 
 function App() {
   const theme = useAppSelector((state) => state.ui.theme);
@@ -82,6 +83,7 @@ function App() {
                 <TravelProHeader showLogout={true} onLogout={handleLogout} />
                 <UserInfoHeader />
                 <ActivitiesGrid />
+                <AchievementsGrid />
               </div>
               <ToastContainer
                 position="top-right"

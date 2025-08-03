@@ -6,6 +6,7 @@ export { Badge } from './Badge/Badge';
 export { Avatar } from './Avatar/Avatar';
 export { Icon } from './Icon/Icon';
 export { ProgressBar } from './ProgressBar/ProgressBar';
+export { ChatButton } from './ChatButton/ChatButton';
 
 // Auth atoms
 export { default as AuthInput } from './AuthInput/AuthInput';

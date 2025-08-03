@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import './App.css';
 import { TravelProHeader, UserInfoHeader } from './components/molecules';
@@ -17,6 +17,8 @@ import { LoadingSpinner } from './components/molecules';
 import { selectUser } from './features/auth/authSlice';
 import ActivitiesGrid from './components/organisms/ActivityCard/ActivitiesGrid';
 import { AchievementsGrid } from './components/organisms/Achievement/AchievementsGrid';
+import { ChatButton } from './components/atoms';
+import { ChatDialog } from './components/molecules/ChatDialog/ChatDialog';
 
 function App() {
   const theme = useAppSelector((state) => state.ui.theme);
@@ -24,6 +26,7 @@ function App() {
   const isAuthInitialized = useAppSelector(selectAuthInitialized);
   const isAuthLoading = useAppSelector(selectAuthLoading);
   const dispatch = useAppDispatch();
+  const [isChatOpen, setIsChatOpen] = useState(false);
   // const [activeTab, setActiveTab] = useState('dashboard');
   const navigate = useNavigate();
 
@@ -45,6 +48,10 @@ function App() {
       toast.error('Ошибка выхода: ' + (e instanceof Error ? e.message : e));
     }
     dispatch(logout());
+  };
+
+  const handleChatToggle = () => {
+    setIsChatOpen(!isChatOpen);
   };
 
   if (!isAuthInitialized || isAuthLoading) {
@@ -85,6 +92,11 @@ function App() {
                 <ActivitiesGrid />
                 <AchievementsGrid />
               </div>
+              <ChatButton onClick={handleChatToggle} />
+              <ChatDialog
+                opened={isChatOpen}
+                onClose={() => setIsChatOpen(false)}
+              />
               <ToastContainer
                 position="top-right"
                 autoClose={3000}

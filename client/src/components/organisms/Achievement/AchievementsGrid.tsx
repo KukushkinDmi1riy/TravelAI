@@ -1,37 +1,83 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import {
+  fetchUserAchievements,
+  selectAchievements,
+  selectAchievementsLoading,
+  selectAchievementsError,
+} from '../../../features/achievements/achievementsSlice';
+import { selectUser } from '../../../features/auth/authSlice';
 import styles from './AchievementsGrid.module.css';
 
-const achievements = [
-  { icon: '🎯', title: 'Снайпер продаж', unlocked: true },
-  { icon: '🚀', title: 'Скоростной турагент', unlocked: true },
-  { icon: '🌍', title: 'Знаток Турции', unlocked: true },
-  { icon: '🔥', title: '7 дней подряд', unlocked: true },
-  { icon: '🎓', title: 'Отличник квизов', unlocked: true },
-  { icon: '💎', title: 'Знаток luxury', unlocked: false },
-];
+export const AchievementsGrid: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  const achievements = useAppSelector(selectAchievements);
+  const loading = useAppSelector(selectAchievementsLoading);
+  const error = useAppSelector(selectAchievementsError);
 
-export const AchievementsGrid: React.FC = () => (
-  <div className={styles.achievementsWrapper}>
-    <div className={styles.achievementsTitle}>
-      <span role="img" aria-label="medal">
-        🏅
-      </span>{' '}
-      Ваши достижения
-    </div>
-    <div className={styles.achievementsGrid}>
-      {achievements.map((ach, idx) => (
-        <div
-          key={idx}
-          className={
-            styles.achievement + (!ach.unlocked ? ' ' + styles.locked : '')
-          }
-        >
-          <div className={styles.achievementIcon}>{ach.icon}</div>
-          <div className={styles.achievementTitle}>{ach.title}</div>
+  useEffect(() => {
+    if (user?.id) {
+      dispatch(fetchUserAchievements(user.id));
+    }
+  }, [dispatch, user?.id]);
+
+  if (loading) {
+    return (
+      <div className={styles.achievementsWrapper}>
+        <div className={styles.achievementsTitle}>
+          <span role="img" aria-label="medal">
+            🏅
+          </span>{' '}
+          Ваши достижения
         </div>
-      ))}
+        <div className={styles.achievementsGrid}>
+          <div>Загрузка достижений...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.achievementsWrapper}>
+        <div className={styles.achievementsTitle}>
+          <span role="img" aria-label="medal">
+            🏅
+          </span>{' '}
+          Ваши достижения
+        </div>
+        <div className={styles.achievementsGrid}>
+          <div>Ошибка загрузки: {error}</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.achievementsWrapper}>
+      <div className={styles.achievementsTitle}>
+        <span role="img" aria-label="medal">
+          🏅
+        </span>{' '}
+        Ваши достижения
+      </div>
+      <div className={styles.achievementsGrid}>
+        {achievements.map((achievement) => (
+          <div
+            key={achievement.id}
+            className={
+              styles.achievement +
+              (!achievement.unlocked ? ' ' + styles.locked : '')
+            }
+          >
+            <div className={styles.achievementIcon}>{achievement.icon}</div>
+            <div className={styles.achievementTitle}>{achievement.name}</div>
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default AchievementsGrid;

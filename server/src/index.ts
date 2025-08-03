@@ -4,6 +4,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 
 import authRoutes from './routes/auth';
+import achievementsRoutes from './routes/achievements';
 import UserModel from './models/User';
 import { attachCsrfToken, verifyCsrf } from './middleware/auth';
 
@@ -43,6 +44,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Маршруты
 app.use('/api/auth', authRoutes);
+app.use('/api/achievements', achievementsRoutes);
 
 // Существующий маршрут
 app.get('/api/data', (req: Request, res: Response) => {

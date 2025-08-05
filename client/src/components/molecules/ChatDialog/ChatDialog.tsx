@@ -1,10 +1,33 @@
-import React, { useState } from 'react';
-import { Modal, TextInput, Button, Text, Box } from '@mantine/core';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  Modal,
+  TextInput,
+  Button,
+  Text,
+  Box,
+  LoadingOverlay,
+  Alert,
+} from '@mantine/core';
+import {
+  sendMessageToAI,
+  getChatHistory,
+  pollAIResponse,
+  type ChatMessage,
+} from '../../../services/chatService';
+import { useCsrfToken } from '../../../hooks/useCsrfToken';
+import { usePolling } from '../../../hooks/usePolling';
 import styles from './ChatDialog.module.css';
 
 interface ChatDialogProps {
   opened: boolean;
   onClose: () => void;
+}
+
+interface Message {
+  id: string;
+  text: string;
+  isAI: boolean;
+  timestamp: string;
 }
 
 const SendIcon = () => (
@@ -25,33 +48,162 @@ const SendIcon = () => (
 
 export const ChatDialog: React.FC<ChatDialogProps> = ({ opened, onClose }) => {
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     {
-      id: 1,
+      id: '1',
       text: 'Привет! Я твой AI-помощник. Могу помочь с информацией об отелях, ценах, визах или подсказать в работе с клиентами. Что тебя интересует?',
       isAI: true,
+      timestamp: new Date().toISOString(),
     },
   ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [csrfError, setCsrfError] = useState<string | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { csrfToken, isLoading: csrfLoading } = useCsrfToken();
 
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      const newMessage = {
-        id: messages.length + 1,
+  // Polling для получения ответа от AI агента
+  const { isPolling, startPolling } = usePolling({
+    interval: 3000, // Проверяем каждые 3 секунды
+    maxAttempts: 10, // Максимум 10 попыток
+    onSuccess: (data) => {
+      if (data.aiResponse) {
+        const aiMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          text: data.aiResponse,
+          isAI: true,
+          timestamp: new Date().toISOString(),
+        };
+        setMessages((prev) => [...prev, aiMessage]);
+      }
+    },
+    onError: (error) => {
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: `Ошибка получения ответа: ${error}`,
+        isAI: true,
+        timestamp: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    },
+  });
+
+  // Автопрокрутка к последнему сообщению
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Загрузка истории чата при открытии
+  useEffect(() => {
+    if (opened) {
+      loadChatHistory();
+    }
+  }, [opened]);
+
+  const loadChatHistory = async () => {
+    try {
+      const response = await getChatHistory();
+      if (response.success && response.data.messages.length > 0) {
+        setMessages(response.data.messages);
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки истории чата:', error);
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (message.trim() && !isLoading && !csrfLoading) {
+      // Проверяем наличие CSRF токена
+      if (!csrfToken) {
+        setCsrfError('Ошибка безопасности. Пожалуйста, обновите страницу.');
+        return;
+      }
+
+      const userMessage: Message = {
+        id: Date.now().toString(),
         text: message,
         isAI: false,
+        timestamp: new Date().toISOString(),
       };
-      setMessages([...messages, newMessage]);
-      setMessage('');
 
-      // Имитация ответа AI
-      setTimeout(() => {
-        const aiResponse = {
-          id: messages.length + 2,
-          text: 'Спасибо за ваше сообщение! Я обрабатываю ваш запрос...',
+      setMessages((prev) => [...prev, userMessage]);
+      setMessage('');
+      setIsLoading(true);
+      setCsrfError(null);
+
+      try {
+        // Подготавливаем историю для отправки
+        const conversationHistory: ChatMessage[] = messages.map((msg) => ({
+          id: msg.id,
+          text: msg.text,
+          isAI: msg.isAI,
+          timestamp: msg.timestamp,
+        }));
+
+        const response = await sendMessageToAI(message, conversationHistory, {
+          userProfile: {
+            // Здесь можно добавить данные пользователя из контекста
+          },
+          travelPreferences: {
+            // Здесь можно добавить предпочтения пользователя
+          },
+        });
+
+        if (response.success && response.aiResponse) {
+          const aiMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            text: response.aiResponse,
+            isAI: true,
+            timestamp: new Date().toISOString(),
+          };
+          setMessages((prev) => [...prev, aiMessage]);
+
+          // Если это временный ответ о том, что сообщение обрабатывается
+          if (
+            response.aiResponse.includes('обрабатывается') ||
+            response.aiResponse.includes('ожидайте')
+          ) {
+            console.log(
+              'Сообщение отправлено в обработку, запускаем polling...',
+            );
+            // Запускаем polling для получения финального ответа
+            if (response.requestId) {
+              startPolling(async () => {
+                // Делаем реальный запрос к серверу для проверки готовности ответа
+                const pollingResponse = await pollAIResponse(
+                  response.requestId,
+                );
+                return pollingResponse;
+              });
+            }
+          }
+        } else {
+          // Показываем ошибку как сообщение AI
+          const errorMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            text:
+              response.error ||
+              'Извините, произошла ошибка при обработке вашего сообщения.',
+            isAI: true,
+            timestamp: new Date().toISOString(),
+          };
+          setMessages((prev) => [...prev, errorMessage]);
+        }
+      } catch (error) {
+        console.error('Ошибка отправки сообщения:', error);
+        const errorMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          text: 'Извините, произошла ошибка при отправке сообщения.',
           isAI: true,
+          timestamp: new Date().toISOString(),
         };
-        setMessages((prev) => [...prev, aiResponse]);
-      }, 1000);
+        setMessages((prev) => [...prev, errorMessage]);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -80,6 +232,20 @@ export const ChatDialog: React.FC<ChatDialogProps> = ({ opened, onClose }) => {
       }}
     >
       <div className={styles.chatContainer}>
+        <LoadingOverlay visible={isLoading || csrfLoading || isPolling} />
+
+        {csrfError && (
+          <Alert color="red" mb="md">
+            {csrfError}
+          </Alert>
+        )}
+
+        {isPolling && (
+          <Alert color="blue" mb="md">
+            Ожидаем ответ от AI агента...
+          </Alert>
+        )}
+
         <div className={styles.messagesContainer}>
           {messages.map((msg) => (
             <div
@@ -91,23 +257,26 @@ export const ChatDialog: React.FC<ChatDialogProps> = ({ opened, onClose }) => {
               <Text size="sm">{msg.text}</Text>
             </div>
           ))}
+          <div ref={messagesEndRef} />
         </div>
 
         <div className={styles.inputContainer}>
           <TextInput
-            placeholder="Напишите сообщение..."
+            placeholder={csrfLoading ? 'Загрузка...' : 'Напишите сообщение...'}
             value={message}
             onChange={(event) => setMessage(event.currentTarget.value)}
             onKeyPress={handleKeyPress}
             className={styles.input}
+            disabled={isLoading || csrfLoading}
             rightSection={
               <Button
                 onClick={handleSendMessage}
                 size="sm"
                 className={styles.sendButton}
-                disabled={!message.trim()}
+                disabled={!message.trim() || isLoading || csrfLoading}
+                loading={isLoading}
               >
-                <SendIcon />
+                {!isLoading && <SendIcon />}
               </Button>
             }
           />

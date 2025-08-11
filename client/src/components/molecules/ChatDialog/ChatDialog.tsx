@@ -1,6 +1,23 @@
-import React, { useState } from 'react';
-import { Modal, TextInput, Button, Text, Box } from '@mantine/core';
+import React, { useEffect, useState } from 'react';
+import {
+  Modal,
+  TextInput,
+  Button,
+  Text,
+  Box,
+  Loader,
+  Group,
+} from '@mantine/core';
 import styles from './ChatDialog.module.css';
+import { ensureCsrfToken } from '../../../features/auth/api';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import {
+  addMessage,
+  selectConversations,
+  selectActiveConversationId,
+} from '../../../features/chat/chatSlice';
+import type { ChatTurn } from '../../../features/chat/api';
+import { sendChatMessage } from '../../../features/chat/api';
 
 interface ChatDialogProps {
   opened: boolean;
@@ -24,34 +41,67 @@ const SendIcon = () => (
 );
 
 export const ChatDialog: React.FC<ChatDialogProps> = ({ opened, onClose }) => {
+  const dispatch = useAppDispatch();
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      text: 'Привет! Я твой AI-помощник. Могу помочь с информацией об отелях, ценах, визах или подсказать в работе с клиентами. Что тебя интересует?',
-      isAI: true,
-    },
-  ]);
+  const conversations = useAppSelector(selectConversations);
+  const activeConversationId = useAppSelector(selectActiveConversationId);
 
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      const newMessage = {
-        id: messages.length + 1,
-        text: message,
-        isAI: false,
-      };
-      setMessages([...messages, newMessage]);
-      setMessage('');
+  const messages = conversations[activeConversationId] ?? [];
+  const [isGenerating, setIsGenerating] = useState(false);
 
-      // Имитация ответа AI
-      setTimeout(() => {
-        const aiResponse = {
-          id: messages.length + 2,
-          text: 'Спасибо за ваше сообщение! Я обрабатываю ваш запрос...',
-          isAI: true,
-        };
-        setMessages((prev) => [...prev, aiResponse]);
-      }, 1000);
+  useEffect(() => {
+    if (opened) {
+      void ensureCsrfToken();
+    }
+  }, [opened]);
+
+  const handleSendMessage = async () => {
+    if (!message.trim() || isGenerating) return;
+    const userMessageId = `${Date.now()}-user`;
+    dispatch(
+      addMessage({
+        message: {
+          id: userMessageId,
+          role: 'user',
+          content: message,
+          createdAt: Date.now(),
+        },
+      }),
+    );
+    setMessage('');
+    setIsGenerating(true);
+
+    try {
+      const history: ChatTurn[] = messages.map((m) => ({
+        role: m.role,
+        content: m.content,
+      }));
+
+      const reply = await sendChatMessage({ message, history });
+
+      dispatch(
+        addMessage({
+          message: {
+            id: `${Date.now()}-assistant`,
+            role: 'assistant',
+            content: reply,
+            createdAt: Date.now(),
+          },
+        }),
+      );
+    } catch (error: unknown) {
+      dispatch(
+        addMessage({
+          message: {
+            id: `${Date.now()}-error`,
+            role: 'assistant',
+            content: `⚠️ Ошибка: ${error instanceof Error ? error.message : 'что-то пошло не так'}`,
+            createdAt: Date.now(),
+          },
+        }),
+      );
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -85,15 +135,25 @@ export const ChatDialog: React.FC<ChatDialogProps> = ({ opened, onClose }) => {
             <div
               key={msg.id}
               className={`${styles.message} ${
-                msg.isAI ? styles.aiMessage : styles.userMessage
+                msg.role === 'assistant' || msg.role === 'system'
+                  ? styles.aiMessage
+                  : styles.userMessage
               }`}
             >
-              <Text size="sm">{msg.text}</Text>
+              <Text size="sm">{msg.content}</Text>
             </div>
           ))}
         </div>
 
         <div className={styles.inputContainer}>
+          {isGenerating && (
+            <Group gap="xs" style={{ marginBottom: 8 }}>
+              <Loader size="xs" />
+              <Text size="xs" c="dimmed">
+                Генерация ответа от OpenAI...
+              </Text>
+            </Group>
+          )}
           <TextInput
             placeholder="Напишите сообщение..."
             value={message}
@@ -105,7 +165,7 @@ export const ChatDialog: React.FC<ChatDialogProps> = ({ opened, onClose }) => {
                 onClick={handleSendMessage}
                 size="sm"
                 className={styles.sendButton}
-                disabled={!message.trim()}
+                disabled={!message.trim() || isGenerating}
               >
                 <SendIcon />
               </Button>

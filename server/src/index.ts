@@ -4,6 +4,8 @@ import express, { NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 
 import authRoutes from './routes/auth';
+import chatRoutes from './routes/chat';
+import mockAIRoutes from './routes/mockAI';
 import achievementsRoutes from './routes/achievements';
 import UserModel from './models/User';
 import { attachCsrfToken, verifyCsrf } from './middleware/auth';
@@ -33,8 +35,22 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(attachCsrfToken);
-app.use(verifyCsrf);
+// CSRF защита только для не-API маршрутов
+app.use((req, res, next) => {
+  if (!req.path.startsWith('/api/')) {
+    attachCsrfToken(req, res, next);
+  } else {
+    next();
+  }
+});
+
+app.use((req, res, next) => {
+  if (!req.path.startsWith('/api/')) {
+    verifyCsrf(req, res, next);
+  } else {
+    next();
+  }
+});
 
 // Логирование запросов
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -44,6 +60,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Маршруты
 app.use('/api/auth', authRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api', mockAIRoutes); // Mock AI агент (только для разработки)
 app.use('/api/achievements', achievementsRoutes);
 
 // Существующий маршрут
@@ -78,6 +96,10 @@ const server = app.listen(port, () => {
   console.log('- GET /api/auth/dashboard - Личный кабинет');
   console.log('- GET /api/auth/users - Список пользователей');
   console.log('- PATCH /api/auth/users/:id/approve - Одобрение пользователя');
+  console.log('- POST /api/chat/send-message - Отправка сообщения AI агенту');
+  console.log('- GET /api/chat/history - История чата');
+  console.log('- POST /api/chat/ai-webhook - Вебхук от AI агента');
+  console.log('- GET /api/chat/status - Статус интеграции с AI агентом');
 });
 
 // Graceful shutdown

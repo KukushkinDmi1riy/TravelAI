@@ -4,7 +4,6 @@ import {
   TextInput,
   Button,
   Text,
-  Box,
   LoadingOverlay,
   Alert,
 } from '@mantine/core';
@@ -66,10 +65,11 @@ export const ChatDialog: React.FC<ChatDialogProps> = ({ opened, onClose }) => {
     interval: 3000, // Проверяем каждые 3 секунды
     maxAttempts: 10, // Максимум 10 попыток
     onSuccess: (data) => {
-      if (data.aiResponse) {
+      const result = data as { aiResponse?: string };
+      if (result.aiResponse) {
         const aiMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: data.aiResponse,
+          text: result.aiResponse,
           isAI: true,
           timestamp: new Date().toISOString(),
         };
@@ -174,7 +174,7 @@ export const ChatDialog: React.FC<ChatDialogProps> = ({ opened, onClose }) => {
               startPolling(async () => {
                 // Делаем реальный запрос к серверу для проверки готовности ответа
                 const pollingResponse = await pollAIResponse(
-                  response.requestId,
+                  response.requestId as string,
                 );
                 return pollingResponse;
               });
@@ -217,16 +217,19 @@ export const ChatDialog: React.FC<ChatDialogProps> = ({ opened, onClose }) => {
     <Modal
       opened={opened}
       onClose={onClose}
+      withCloseButton={true}
       title={
-        <Box className={styles.header}>
-          <Text size="lg" fw={600} c="white">
-            AI Помощник TravelPro
-          </Text>
-        </Box>
+        <Text className={styles.headerTitle} fw={800} size="xl" c="white">
+          AI Помощник TravelPro
+        </Text>
       }
       size="md"
-      centered
+      centered={false}
+      radius="lg"
+      overlayProps={{ opacity: 0 }}
       classNames={{
+        root: styles.modalRoot,
+        inner: styles.modalInner,
         header: styles.modalHeader,
         content: styles.modalContent,
       }}
@@ -254,32 +257,37 @@ export const ChatDialog: React.FC<ChatDialogProps> = ({ opened, onClose }) => {
                 msg.isAI ? styles.aiMessage : styles.userMessage
               }`}
             >
-              <Text size="sm">{msg.text}</Text>
+              <Text size="md" fw={600}>
+                {msg.text}
+              </Text>
             </div>
           ))}
           <div ref={messagesEndRef} />
         </div>
 
         <div className={styles.inputContainer}>
-          <TextInput
-            placeholder={csrfLoading ? 'Загрузка...' : 'Напишите сообщение...'}
-            value={message}
-            onChange={(event) => setMessage(event.currentTarget.value)}
-            onKeyPress={handleKeyPress}
-            className={styles.input}
-            disabled={isLoading || csrfLoading}
-            rightSection={
-              <Button
-                onClick={handleSendMessage}
-                size="sm"
-                className={styles.sendButton}
-                disabled={!message.trim() || isLoading || csrfLoading}
-                loading={isLoading}
-              >
-                {!isLoading && <SendIcon />}
-              </Button>
-            }
-          />
+          <div className={styles.inputRow}>
+            <TextInput
+              placeholder={
+                csrfLoading ? 'Загрузка...' : 'Напишите сообщение...'
+              }
+              value={message}
+              onChange={(event) => setMessage(event.currentTarget.value)}
+              onKeyPress={handleKeyPress}
+              className={styles.inputRoot}
+              classNames={{ input: styles.inputField }}
+              disabled={isLoading || csrfLoading}
+            />
+            <Button
+              onClick={handleSendMessage}
+              size="md"
+              className={styles.sendButton}
+              disabled={!message.trim() || isLoading || csrfLoading}
+              loading={isLoading}
+            >
+              {!isLoading && <SendIcon />}
+            </Button>
+          </div>
         </div>
       </div>
     </Modal>

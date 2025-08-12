@@ -1,22 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import {
+  fetchUserAchievements,
+  selectAchievements,
+  selectAchievementsLoading,
+  selectAchievementsError,
+} from '../../../features/achievements/achievementsSlice';
+import { selectUser } from '../../../features/auth/authSlice';
+import { LoadingSpinner } from '../../molecules/LoadingSpinner/LoadingSpinner';
+import { Button } from '../../atoms/Button/Button';
 import styles from './AchievementsGrid.module.css';
 
-const achievements = [
-  { icon: '🎯', title: 'Снайпер продаж', unlocked: true },
-  { icon: '🚀', title: 'Скоростной турагент', unlocked: true },
-  { icon: '🌍', title: 'Знаток Турции', unlocked: true },
-  { icon: '🔥', title: '7 дней подряд', unlocked: true },
-  { icon: '🎓', title: 'Отличник квизов', unlocked: true },
-  { icon: '💎', title: 'Знаток luxury', unlocked: false },
-  { icon: '🏆', title: 'Чемпион месяца', unlocked: false },
-  { icon: '⭐', title: 'Звезда сервиса', unlocked: true },
-  { icon: '🎪', title: 'Мастер презентаций', unlocked: false },
-  { icon: '🌴', title: 'Эксперт по пляжному отдыху', unlocked: true },
-  { icon: '🏔️', title: 'Горный гид', unlocked: false },
-  { icon: '🎨', title: 'Креативный директор', unlocked: true },
-];
-
 export const AchievementsGrid: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  const achievements = useAppSelector(selectAchievements);
+  const loading = useAppSelector(selectAchievementsLoading);
+  const error = useAppSelector(selectAchievementsError);
+
+  // Состояние карусели
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -32,7 +34,14 @@ export const AchievementsGrid: React.FC = () => {
   ];
 
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    if (user?.id) {
+      dispatch(fetchUserAchievements(user.id));
+    }
+  }, [dispatch, user?.id]);
+
+  // Автопрокрутка карусели
+  useEffect(() => {
+    if (!isAutoPlaying || loading || error || achievements.length === 0) return;
 
     const interval = setInterval(() => {
       setCurrentSlide((prev) => {
@@ -46,7 +55,7 @@ export const AchievementsGrid: React.FC = () => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [isAutoPlaying, totalSlides]);
+  }, [isAutoPlaying, totalSlides, loading, error, achievements.length]);
 
   const handleIndicatorClick = (index: number) => {
     setCurrentSlide(index);
@@ -94,6 +103,78 @@ export const AchievementsGrid: React.FC = () => {
     return `translateX(-${offset}%)`;
   };
 
+  if (loading) {
+    return (
+      <div className={styles.achievementsWrapper}>
+        <div className={styles.achievementsTitle}>Ваши достижения</div>
+        <div className={styles.centeredContent}>
+          <LoadingSpinner
+            size="md"
+            title="🏆 Загрузка достижений"
+            subtitle="Получаем ваши награды..."
+            fullScreen={false}
+            background="transparent"
+            color="#667eea"
+            animation="fade"
+            duration={300}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.achievementsWrapper}>
+        <div className={styles.achievementsTitle}>
+          <span role="img" aria-label="medal">
+            🏅
+          </span>{' '}
+          Ваши достижения
+        </div>
+        <div className={styles.centeredContent}>
+          <div className={styles.errorContainer}>
+            <div className={styles.errorIcon}>⚠️</div>
+            <div className={styles.errorText}>Ошибка загрузки достижений</div>
+            <div className={styles.errorDetails}>{error}</div>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() =>
+                user?.id && dispatch(fetchUserAchievements(user.id))
+              }
+            >
+              Попробовать снова
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Если нет достижений, показываем пустое состояние
+  if (achievements.length === 0) {
+    return (
+      <div className={styles.achievementsWrapper}>
+        <div className={styles.achievementsTitle}>
+          <span role="img" aria-label="medal">
+            🏅
+          </span>{' '}
+          Ваши достижения
+        </div>
+        <div className={styles.centeredContent}>
+          <div className={styles.errorContainer}>
+            <div className={styles.errorIcon}>📭</div>
+            <div className={styles.errorText}>У вас пока нет достижений</div>
+            <div className={styles.errorDetails}>
+              Выполняйте задания и получайте награды!
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.achievementsWrapper}>
       <div className={styles.achievementsTitle}>
@@ -112,13 +193,13 @@ export const AchievementsGrid: React.FC = () => {
             transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none',
           }}
         >
-          {infiniteAchievements.map((ach, idx) => (
+          {infiniteAchievements.map((achievement, idx) => (
             <div
-              key={idx}
-              className={`${styles.achievement} ${!ach.unlocked ? styles.locked : ''}`}
+              key={`${achievement.id}-${idx}`}
+              className={`${styles.achievement} ${!achievement.unlocked ? styles.locked : ''}`}
             >
-              <div className={styles.achievementIcon}>{ach.icon}</div>
-              <div className={styles.achievementTitle}>{ach.title}</div>
+              <div className={styles.achievementIcon}>{achievement.icon}</div>
+              <div className={styles.achievementTitle}>{achievement.name}</div>
             </div>
           ))}
         </div>

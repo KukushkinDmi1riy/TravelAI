@@ -7,6 +7,15 @@
   margin-bottom: 40px;
 }
 
+.centeredContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 200px;
+}
+
 .achievementsTitle {
   font-size: 28px;
   font-weight: bold;
@@ -150,6 +159,37 @@
   background-color: #228BE6;
 }
 
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  min-height: 200px;
+  width: 100%;
+  height: 100%;
+}
+
+.errorIcon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.errorText {
+  font-size: 18px;
+  font-weight: 600;
+  color: #dc3545;
+  margin-bottom: 8px;
+}
+
+.errorDetails {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 20px;
+  max-width: 300px;
+}
+
 /* Адаптивность */
 @media (max-width: 900px) {
   .achievement {
@@ -205,5 +245,19 @@
   
   .carouselIndicatorActive {
     width: 32px;
+  }
+  
+  .errorContainer {
+    padding: 20px 16px;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .errorIcon {
+    font-size: 36px;
+  }
+  
+  .errorText {
+    font-size: 16px;
   }
 } 

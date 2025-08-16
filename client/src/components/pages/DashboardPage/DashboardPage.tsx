@@ -1,5 +1,6 @@
 import { Text } from '@mantine/core';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { NotificationPreview } from '../../molecules/NotificationPreview/NotificationPreview';
 import { StatsStripe, DailyProgress } from '../../molecules';
 import ActivityCard from '../../organisms/ActivityCard/ActivityCard';
@@ -22,6 +23,7 @@ export function DashboardPage({
 }: Props) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className={styles.page}>
@@ -31,18 +33,32 @@ export function DashboardPage({
             <Text fw={800} fz={28} className={styles.brand}>
               ✈️ TravelPro AI
             </Text>
-            <div
-              className={styles.bell}
-              aria-label="notifications"
-              onClick={() => setShowNotifications((v) => !v)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) =>
-                (e.key === 'Enter' || e.key === ' ') &&
-                setShowNotifications((v) => !v)
-              }
-            >
-              🔔
+            <div className={styles.headerActions}>
+              <div
+                className={styles.iconButton}
+                aria-label="back"
+                onClick={() => navigate(-1)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) =>
+                  (e.key === 'Enter' || e.key === ' ') && navigate(-1)
+                }
+              >
+                ←
+              </div>
+              <div
+                className={styles.bell}
+                aria-label="notifications"
+                onClick={() => setShowNotifications((v) => !v)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) =>
+                  (e.key === 'Enter' || e.key === ' ') &&
+                  setShowNotifications((v) => !v)
+                }
+              >
+                🔔
+              </div>
             </div>
           </div>
 

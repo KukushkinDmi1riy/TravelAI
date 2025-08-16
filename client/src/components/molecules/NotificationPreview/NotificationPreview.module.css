@@ -1,0 +1,28 @@
+.dock {
+  position: absolute; /* parent must be position: relative */
+}
+
+.card {
+  background: #fff;
+  color: #111827;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.15);
+  animation: slideRight 260ms ease-out both;
+  width: clamp(280px, 32vw, 360px);
+}
+
+.icon { font-size: 20px; }
+.body { display: flex; flex-direction: column; }
+.title { font-weight: 800; font-size: 16px; line-height: 1.2; }
+.text { font-size: 14px; color: #374151; }
+
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(18px) translateY(-6px); }
+  to   { opacity: 1; transform: translateX(0) translateY(0); }
+}
+
+

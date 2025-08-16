@@ -60,6 +60,12 @@ body {
   background: linear-gradient(to right, #522f70 0%, #2c235d 100%);
 }
 
+/* Override app background on dashboard to keep body white */
+body.dashboard-light .App.light-theme,
+body.dashboard-light .App.dark-theme {
+  background: #ffffff !important;
+}
+
 .Toastify__toast {
   border-radius: 12px !important;
   padding-right: 32px !important;

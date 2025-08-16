@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import {
   fetchUserAchievements,
@@ -11,7 +11,7 @@ import { LoadingSpinner } from '../../molecules/LoadingSpinner/LoadingSpinner';
 import { Button } from '../../atoms/Button/Button';
 import styles from './AchievementsGrid.module.css';
 
-export const AchievementsGrid: React.FC = () => {
+export const AchievementsGrid = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const achievements = useAppSelector(selectAchievements);

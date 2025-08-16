@@ -8,12 +8,12 @@ interface AchievementProps {
   className?: string;
 }
 
-export const Achievement: React.FC<AchievementProps> = ({
+export const Achievement = ({
   title,
   icon,
   unlocked = false,
   className = '',
-}) => {
+}: AchievementProps) => {
   const achievementClass = `achievement ${unlocked ? 'achievement--unlocked' : 'achievement--locked'} ${className}`;
 
   return (

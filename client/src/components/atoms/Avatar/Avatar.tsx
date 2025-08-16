@@ -10,14 +10,14 @@ interface AvatarProps extends Omit<MantineAvatarProps, 'size'> {
   className?: string;
 }
 
-export const Avatar: React.FC<AvatarProps> = ({
+export const Avatar = ({
   src,
   alt = 'Avatar',
   size = 'md',
   initials,
   className = '',
   ...mantineProps
-}) => {
+}: AvatarProps) => {
   // Преобразуем размеры в Mantine формат
   const getMantineSize = () => {
     switch (size) {

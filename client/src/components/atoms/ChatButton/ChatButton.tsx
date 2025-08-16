@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import robotSvg from '../../../assets/robot.svg';
 
@@ -6,7 +5,7 @@ interface ChatButtonProps {
   onClick: () => void;
 }
 
-const RobotIconImg: React.FC<{ size?: number }> = ({ size = 24 }) => (
+const RobotIconImg = ({ size = 24 }: { size?: number }) => (
   <img
     src={robotSvg}
     alt="open chat"
@@ -16,7 +15,7 @@ const RobotIconImg: React.FC<{ size?: number }> = ({ size = 24 }) => (
   />
 );
 
-export const ChatButton: React.FC<ChatButtonProps> = ({ onClick }) => {
+export const ChatButton = ({ onClick }: ChatButtonProps) => {
   return (
     <div
       style={{

@@ -11,7 +11,7 @@ import {
   selectAuthLoading,
 } from './features/auth/authSlice';
 import { logoutUser } from './features/auth/api';
-import { useNavigate, Routes, Route } from 'react-router-dom';
+import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import AuthContainer from './components/pages/Auth/AuthContainer';
 import { LoadingSpinner } from './components/molecules';
 import { selectUser } from './features/auth/authSlice';
@@ -19,6 +19,7 @@ import ActivitiesGrid from './components/organisms/ActivityCard/ActivitiesGrid';
 import { AchievementsGrid } from './components/organisms/Achievement/AchievementsGrid';
 import { ChatButton } from './components/atoms';
 import { ChatDialog } from './components/molecules/ChatDialog/ChatDialog';
+import { DashboardPage } from './components/pages/DashboardPage/DashboardPage';
 
 function App() {
   const theme = useAppSelector((state) => state.ui.theme);
@@ -29,17 +30,25 @@ function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   // const [activeTab, setActiveTab] = useState('dashboard');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Toggle white body background on dashboard
+  useEffect(() => {
+    if (location.pathname.startsWith('/dashboard')) {
+      document.body.classList.add('dashboard-light');
+    } else {
+      document.body.classList.remove('dashboard-light');
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
-    // Только после инициализации аутентификации делаем навигацию
-    if (isAuthInitialized) {
-      if (user) {
-        navigate('/');
-      } else {
-        navigate('/auth');
-      }
+    if (!isAuthInitialized) return;
+    if (!user) {
+      if (location.pathname !== '/auth') navigate('/auth');
+      return;
     }
-  }, [user, navigate, isAuthInitialized]);
+    if (location.pathname === '/auth') navigate('/');
+  }, [user, isAuthInitialized, location.pathname, navigate]);
 
   const handleLogout = async () => {
     try {
@@ -69,6 +78,16 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
+        <Route
+          path="/dashboard"
+          element={
+            <div className={`App ${theme}-theme`}>
+              <div>
+                <DashboardPage />
+              </div>
+            </div>
+          }
+        />
         <Route
           path="/auth"
           element={

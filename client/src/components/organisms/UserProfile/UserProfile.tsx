@@ -1,4 +1,3 @@
-import React from 'react';
 import { Avatar } from '../../atoms/Avatar/Avatar';
 import { Badge } from '../../atoms/Badge/Badge';
 import { ProgressBar } from '../../atoms/ProgressBar/ProgressBar';
@@ -18,7 +17,7 @@ interface UserProfileProps {
   className?: string;
 }
 
-export const UserProfile: React.FC<UserProfileProps> = ({
+export const UserProfile = ({
   name,
   avatar,
   level,
@@ -26,7 +25,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   maxXp,
   stats,
   className = '',
-}) => {
+}: UserProfileProps) => {
   const initials = name
     .split(' ')
     .map((n) => n[0])

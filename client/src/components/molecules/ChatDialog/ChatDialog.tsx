@@ -45,7 +45,7 @@ const SendIcon = () => (
   </svg>
 );
 
-export const ChatDialog: React.FC<ChatDialogProps> = ({ opened, onClose }) => {
+export const ChatDialog = ({ opened, onClose }: ChatDialogProps) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([
     {

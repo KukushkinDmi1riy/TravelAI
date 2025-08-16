@@ -1,4 +1,3 @@
-import React from 'react';
 import { Progress, Group, Text } from '@mantine/core';
 import type { ProgressProps as MantineProgressProps } from '@mantine/core';
 
@@ -12,7 +11,7 @@ interface ProgressBarProps
   className?: string;
 }
 
-export const ProgressBar: React.FC<ProgressBarProps> = ({
+export const ProgressBar = ({
   value,
   max = 100,
   size = 'md',
@@ -20,7 +19,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   showLabel = false,
   className = '',
   ...mantineProps
-}) => {
+}: ProgressBarProps) => {
   const percentage = Math.min((value / max) * 100, 100);
 
   // Преобразуем размеры

@@ -1,4 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import type { ReactNode } from 'react';
+import { useClickOutside } from '@mantine/hooks';
 import styles from './NotificationPreview.module.css';
 
 type NotificationPreviewProps = {
@@ -6,7 +8,7 @@ type NotificationPreviewProps = {
   onClose: () => void;
   title: string;
   text: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   autoHideMs?: number;
   top?: number;
   right?: number;
@@ -22,19 +24,9 @@ export const NotificationPreview = ({
   top = 8,
   right = 8,
 }: NotificationPreviewProps) => {
-  const cardRef = useRef<HTMLDivElement | null>(null);
+  const cardRef = useClickOutside(onClose, ['mousedown', 'touchstart']);
 
-  useEffect(() => {
-    if (!open) return;
-    const onDocClick = (e: MouseEvent) => {
-      const target = e.target as Node;
-      if (cardRef.current && !cardRef.current.contains(target)) {
-        onClose();
-      }
-    };
-    document.addEventListener('mousedown', onDocClick);
-    return () => document.removeEventListener('mousedown', onDocClick);
-  }, [open, onClose]);
+  // Автоскрытие по таймеру при открытии
 
   useEffect(() => {
     if (!open || !autoHideMs) return;

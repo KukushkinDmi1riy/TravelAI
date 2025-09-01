@@ -14,8 +14,6 @@ body {
 /* Общие стили для приложения */
 .App {
   min-height: 100vh;
-  height: 100vh;
-  overflow: hidden;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -33,9 +31,6 @@ body {
   padding-left: 80px;
   padding-right: 80px;
   flex: 1;
-  overflow-y: auto; /* scroll inside content only */
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain; /* prevent bounce/over-scroll */
 }
 
 /* Стили только для кнопок в App компоненте, не затрагивая Mantine компоненты */

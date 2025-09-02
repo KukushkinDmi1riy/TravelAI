@@ -8,7 +8,7 @@ import chatRoutes from './routes/chat';
 import UserModel from './models/User';
 import { attachCsrfToken, verifyCsrf } from './middleware/auth';
 
-const app = express();
+export const app = express();
 const port = process.env.PORT || 3005;
 
 // Middleware
@@ -68,53 +68,58 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-const server = app.listen(port, () => {
-  console.log(`Сервер запущен на http://localhost:${port}`);
-  console.log('Доступные маршруты:');
-  console.log('- POST /api/auth/register - Регистрация');
-  console.log('- POST /api/auth/login - Вход');
-  console.log('- GET /api/auth/profile - Профиль пользователя');
-  console.log('- GET /api/auth/verify-token - Проверка токена');
-  console.log('- GET /api/auth/dashboard - Личный кабинет');
-  console.log('- GET /api/auth/users - Список пользователей');
-  console.log('- PATCH /api/auth/users/:id/approve - Одобрение пользователя');
-});
-
-// Graceful shutdown
-process.on('SIGINT', async () => {
-  console.log('\nПолучен сигнал SIGINT. Корректное завершение...');
-
-  // Закрываем HTTP сервер
-  server.close(() => {
-    console.log('HTTP сервер закрыт.');
+let server: ReturnType<typeof app.listen> | undefined;
+if (process.env.NODE_ENV !== 'test') {
+  server = app.listen(port, () => {
+    console.log(`Сервер запущен на http://localhost:${port}`);
+    console.log('Доступные маршруты:');
+    console.log('- POST /api/auth/register - Регистрация');
+    console.log('- POST /api/auth/login - Вход');
+    console.log('- GET /api/auth/profile - Профиль пользователя');
+    console.log('- GET /api/auth/verify-token - Проверка токена');
+    console.log('- GET /api/auth/dashboard - Личный кабинет');
+    console.log('- GET /api/auth/users - Список пользователей');
+    console.log('- PATCH /api/auth/users/:id/approve - Одобрение пользователя');
   });
 
-  // Закрываем соединение с базой данных
-  try {
-    await UserModel.disconnect();
-    console.log('Соединение с базой данных закрыто.');
-  } catch (error) {
-    console.error('Ошибка при закрытии соединения с базой данных:', error);
-  }
+  // Graceful shutdown
+  process.on('SIGINT', async () => {
+    console.log('\nПолучен сигнал SIGINT. Корректное завершение...');
 
-  process.exit(0);
-});
+    // Закрываем HTTP сервер
+    server?.close(() => {
+      console.log('HTTP сервер закрыт.');
+    });
 
-process.on('SIGTERM', async () => {
-  console.log('\nПолучен сигнал SIGTERM. Корректное завершение...');
+    // Закрываем соединение с базой данных
+    try {
+      await UserModel.disconnect();
+      console.log('Соединение с базой данных закрыто.');
+    } catch (error) {
+      console.error('Ошибка при закрытии соединения с базой данных:', error);
+    }
 
-  // Закрываем HTTP сервер
-  server.close(() => {
-    console.log('HTTP сервер закрыт.');
+    process.exit(0);
   });
 
-  // Закрываем соединение с базой данных
-  try {
-    await UserModel.disconnect();
-    console.log('Соединение с базой данных закрыто.');
-  } catch (error) {
-    console.error('Ошибка при закрытии соединения с базой данных:', error);
-  }
+  process.on('SIGTERM', async () => {
+    console.log('\nПолучен сигнал SIGTERM. Корректное завершение...');
 
-  process.exit(0);
-});
+    // Закрываем HTTP сервер
+    server?.close(() => {
+      console.log('HTTP сервер закрыт.');
+    });
+
+    // Закрываем соединение с базой данных
+    try {
+      await UserModel.disconnect();
+      console.log('Соединение с базой данных закрыто.');
+    } catch (error) {
+      console.error('Ошибка при закрытии соединения с базой данных:', error);
+    }
+
+    process.exit(0);
+  });
+}
+
+export { server };

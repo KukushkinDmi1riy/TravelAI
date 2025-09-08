@@ -11,7 +11,7 @@
     "build:client": "npm run build --workspace=client",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "format": "prettier --write .",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "keywords": [],
   "author": "",

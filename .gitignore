@@ -24,3 +24,9 @@ dist-ssr
 *.sw?
 
 .env
+.env.test
+.env.local
+
+README_CI_SETUP.md
+CI_CD_README.md
+GITHUB_SECRETS_SETUP.md

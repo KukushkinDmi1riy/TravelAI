@@ -14,7 +14,7 @@ import type {
 } from '../types/index';
 
 // Типизированный интерфейс для запросов
-interface TypedRequest<T = {}> extends Express.Request {
+interface TypedRequest<T = Record<string, unknown>> extends Express.Request {
   body: T;
 }
 
@@ -322,7 +322,7 @@ export const refreshToken = async (req: any, res: Response) => {
     let payload: any;
     try {
       payload = jwt.verify(refreshToken, jwtSecret);
-    } catch (e) {
+    } catch {
       return res
         .status(403)
         .json({ success: false, message: 'Refresh token невалиден' });
@@ -342,7 +342,7 @@ export const refreshToken = async (req: any, res: Response) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
     });
     res.json({ success: true });
-  } catch (error) {
+  } catch {
     res
       .status(500)
       .json({ success: false, message: 'Ошибка обновления токена' });

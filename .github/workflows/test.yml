@@ -30,16 +30,18 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: client/package-lock.json
+          cache-dependency-path: package-lock.json
       
       - name: Install dependencies
         run: npm ci
       
       - name: Run tests
         run: npm run test:run
+        working-directory: ./client
       
       - name: Generate coverage report
         run: npm run coverage
+        working-directory: ./client
       
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -84,7 +86,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: server/package-lock.json
+          cache-dependency-path: package-lock.json
       
       - name: Install dependencies
         run: npm ci

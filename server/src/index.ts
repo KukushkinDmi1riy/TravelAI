@@ -60,7 +60,7 @@ app.use('*', (req: Request, res: Response) => {
 });
 
 // Глобальная обработка ошибок
-app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((error: Error, req: Request, res: Response, _next: NextFunction) => {
   console.error('Необработанная ошибка:', error);
   res.status(500).json({
     success: false,

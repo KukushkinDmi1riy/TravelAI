@@ -1,7 +1,7 @@
-import jwt, { SignOptions } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import UserModel from '../models/User';
-import type { UserProfile, AuthenticatedRequest } from '../types/index';
+import type { AuthenticatedRequest } from '../types/index';
 import crypto from 'crypto';
 
 // Middleware для проверки JWT токена
@@ -49,7 +49,7 @@ export const authenticateToken = async (
     };
 
     next();
-  } catch (error) {
+  } catch {
     res.status(403).json({
       success: false,
       message: 'Недействительный токен',

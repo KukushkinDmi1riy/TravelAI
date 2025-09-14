@@ -1,4 +1,4 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 interface UiState {
   theme: 'light' | 'dark';
@@ -6,7 +6,7 @@ interface UiState {
 
 const initialState: UiState = {
   theme: 'light',
-}
+};
 
 export const uiSlice = createSlice({
   name: 'ui',
@@ -16,8 +16,8 @@ export const uiSlice = createSlice({
       state.theme = action.payload;
     },
   },
-})
+});
 
-export const { setTheme } = uiSlice.actions
+export const { setTheme } = uiSlice.actions;
 
-export default uiSlice.reducer 
+export default uiSlice.reducer;

@@ -1,5 +1,4 @@
 import { Card } from '@mantine/core';
-import React from 'react';
 import styles from './ActivityCard.module.css';
 import { Logo } from '../../atoms';
 import { Button } from '../../atoms/Button/Button';

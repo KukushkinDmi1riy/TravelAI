@@ -1,4 +1,3 @@
-import React from 'react';
 import { Progress, Group, Text } from '@mantine/core';
 import type { ProgressProps as MantineProgressProps } from '@mantine/core';
 

@@ -61,6 +61,11 @@ body {
   font-size: 16px;
 }
 
+body.dashboard-light .App.light-theme,
+body.dashboard-light .App.dark-theme {
+  background: #ffffff !important;
+}
+
 .Toastify__close-button {
   right: 12px !important;
   top: 12px !important;

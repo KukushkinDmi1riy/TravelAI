@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styles from './AchievementsGrid.module.css';
 
 const achievements = [
@@ -16,7 +16,7 @@ const achievements = [
   { icon: '🎨', title: 'Креативный директор', unlocked: true },
 ];
 
-export const AchievementsGrid: React.FC = () => {
+export const AchievementsGrid = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);

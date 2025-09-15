@@ -40,7 +40,7 @@ const SendIcon = () => (
   </svg>
 );
 
-export const ChatDialog: React.FC<ChatDialogProps> = ({ opened, onClose }) => {
+export const ChatDialog = ({ opened, onClose }: ChatDialogProps) => {
   const dispatch = useAppDispatch();
   const [message, setMessage] = useState('');
   const conversations = useAppSelector(selectConversations);

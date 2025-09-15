@@ -9,13 +9,13 @@ interface CardProps extends Omit<MantineCardProps, 'children'> {
   onClick?: () => void;
 }
 
-export const Card: React.FC<CardProps> = ({
+export const Card = ({
   children,
   className = '',
   variant = 'default',
   onClick,
   ...mantineProps
-}) => {
+}: CardProps) => {
   // Преобразуем варианты в Mantine пропсы
   const getMantineProps = () => {
     switch (variant) {

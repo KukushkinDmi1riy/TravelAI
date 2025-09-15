@@ -1,4 +1,3 @@
-import React from 'react';
 import { Avatar as MantineAvatar } from '@mantine/core';
 import type { AvatarProps as MantineAvatarProps } from '@mantine/core';
 
@@ -10,14 +9,14 @@ interface AvatarProps extends Omit<MantineAvatarProps, 'size'> {
   className?: string;
 }
 
-export const Avatar: React.FC<AvatarProps> = ({
+export const Avatar = ({
   src,
   alt = 'Avatar',
   size = 'md',
   initials,
   className = '',
   ...mantineProps
-}) => {
+}: AvatarProps) => {
   // Преобразуем размеры в Mantine формат
   const getMantineSize = () => {
     switch (size) {

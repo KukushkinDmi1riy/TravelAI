@@ -8,12 +8,12 @@ interface IconProps {
   className?: string;
 }
 
-export const Icon: React.FC<IconProps> = ({
+export const Icon = ({
   children,
   size = 'md',
   color,
   className = '',
-}) => {
+}: IconProps) => {
   const iconClass = `icon icon--${size} ${className}`;
   const style = color ? { color } : {};
 

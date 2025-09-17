@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box } from '@mantine/core';
 import styles from './Logo.module.css';
 
@@ -8,11 +7,7 @@ interface LogoProps {
   icon: string;
 }
 
-export const Logo: React.FC<LogoProps> = ({
-  size = 'md',
-  className = '',
-  icon,
-}) => {
+export const Logo = ({ size = 'md', className = '', icon }: LogoProps) => {
   return (
     <Box
       className={`${styles.logoContainer} ${styles[`logoContainer--${size}`]} ${className}`}

@@ -1,0 +1,51 @@
+.card {
+  width: 100%;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(17, 24, 39, 0.08);
+  overflow: hidden;
+}
+
+.topArea {
+  height: 160px;
+  border-bottom: 1px solid rgba(17,24,39,.06);
+  background: linear-gradient(135deg, #6c79f6 0%, #8a6dcf 100%);
+  padding: 16px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  position: relative;
+}
+.badge {
+  position: absolute;
+  right: 16px;
+  top: 12px;
+  background: #ede9fe;
+  color: #4f46e5;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.flag { font-size: 40px; }
+
+.content { padding: 16px; background: #fff; }
+.title { font-weight: 800; font-size: 20px; color: #111827; margin-bottom: 8px; }
+.metaRow { display:flex; align-items:center; gap: 8px; color: #6b7280; font-size: 14px; }
+.metaIcon { font-size: 16px; }
+.dot { color: #9ca3af; }
+
+.actionBtn {
+  width: 100%;
+  margin-top: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 0;
+  font-weight: 800;
+  cursor: pointer;
+}
+.actionBtn:disabled {
+  background: linear-gradient(135deg, #b9b9c6 0%, #b1a9c5 100%);
+  cursor: not-allowed;
+}

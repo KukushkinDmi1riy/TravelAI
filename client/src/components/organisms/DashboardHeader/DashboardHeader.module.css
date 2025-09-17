@@ -1,0 +1,60 @@
+.headerPaper {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px 24px 18px 24px;
+  color: #fff;
+  position: relative;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.headerActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.iconButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.brand { color: #fff; }
+
+.bell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 24px;
+  cursor: pointer;
+}
+.bell::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 10px;
+  height: 10px;
+  background: #ff3b30;
+  border-radius: 50%;
+}
+
+/* Notifications preview */
+.notifDock { position: relative; }
+.notifDock::before { content: ''; position: absolute; inset: 0; }
+.notifCenter { pointer-events: auto; position: absolute; top: 8px; right: 8px; }
+
+
+

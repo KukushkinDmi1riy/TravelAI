@@ -10,13 +10,13 @@ interface BadgeProps
   className?: string;
 }
 
-export const Badge: React.FC<BadgeProps> = ({
+export const Badge = ({
   children,
   variant = 'primary',
   size = 'md',
   className = '',
   ...mantineProps
-}) => {
+}: BadgeProps) => {
   // Преобразуем наши варианты в Mantine цвета и варианты
   const getMantineColor = () => {
     switch (variant) {

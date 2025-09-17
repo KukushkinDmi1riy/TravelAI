@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 
 interface ChatButtonProps {
@@ -24,7 +23,7 @@ const RobotIcon = () => (
   </svg>
 );
 
-export const ChatButton: React.FC<ChatButtonProps> = ({ onClick }) => {
+export const ChatButton = ({ onClick }: ChatButtonProps) => {
   return (
     <motion.button
       onClick={onClick}

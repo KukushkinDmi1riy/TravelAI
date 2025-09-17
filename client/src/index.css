@@ -19,3 +19,8 @@ body,
 body {
   background: linear-gradient(90deg, #6c63ff 0%, #836fff 100%);
 }
+
+/* White body background when on dashboard */
+body.dashboard-light {
+  background: #ffffff !important;
+}

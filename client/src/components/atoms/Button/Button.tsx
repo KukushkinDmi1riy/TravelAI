@@ -13,7 +13,7 @@ interface ButtonProps extends Omit<MantineButtonProps, 'variant' | 'size'> {
   className?: string;
 }
 
-export const Button: React.FC<ButtonProps> = ({
+export const Button = ({
   children,
   variant = 'primary',
   size = 'md',
@@ -22,7 +22,7 @@ export const Button: React.FC<ButtonProps> = ({
   onClick,
   className = '',
   ...mantineProps
-}) => {
+}: ButtonProps) => {
   // Преобразуем наши варианты в Mantine варианты
   const getMantineVariant = (): MantineButtonProps['variant'] => {
     switch (variant) {

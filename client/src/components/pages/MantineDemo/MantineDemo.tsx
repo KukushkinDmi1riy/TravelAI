@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Stack, Title, Group, Space, Code, Divider } from '@mantine/core';
 import { Button, Badge, Avatar, ProgressBar } from '../../atoms';
 import { Card } from '../../molecules';
 
-export const MantineDemo: React.FC = () => {
+export const MantineDemo = () => {
   const [progress, setProgress] = useState(65);
   const [loading, setLoading] = useState(false);
 

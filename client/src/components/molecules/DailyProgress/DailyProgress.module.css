@@ -1,0 +1,4 @@
+.progressBlock { margin-top: 16px; }
+.progressHeader { color:#fff; margin-bottom: 10px; text-align: left; }
+.progressBarWrapper { position:relative; height:10px; border-radius:6px; background: rgba(255,255,255,0.25); }
+.progressPercent { position:absolute; right:12px; bottom: calc(100% + 8px); color:#fff; font-weight:700; }

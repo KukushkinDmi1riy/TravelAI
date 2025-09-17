@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from '../Button/Button';
 
 interface LogoutButtonProps {
@@ -8,12 +7,12 @@ interface LogoutButtonProps {
   className?: string;
 }
 
-export const LogoutButton: React.FC<LogoutButtonProps> = ({
+export const LogoutButton = ({
   onLogout,
   variant = 'gradient',
   size = 'sm',
   className = '',
-}) => {
+}: LogoutButtonProps) => {
   return (
     <Button
       variant={variant}

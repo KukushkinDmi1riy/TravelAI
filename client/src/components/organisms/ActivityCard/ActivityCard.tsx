@@ -43,7 +43,6 @@ export const ActivityCard = ({
           </div>
           {badgeText && <div className={styles.badge}>{badgeText}</div>}
         </div>
-        <div className={styles.cardDescription}>{description}</div>
       </div>
       {/* Title */}
       <div className={styles.cardTitle}>{title}</div>
